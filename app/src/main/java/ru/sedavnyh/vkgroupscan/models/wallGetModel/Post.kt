@@ -23,6 +23,7 @@ data class Post(
     val markedAsAds: Int?,
     @SerializedName("text")
     val text: String?,
-    var GroupAvatar: String?,
-    var GroupName: String?
+    var groupAvatar: String?,
+    var groupName: String?,
+    var totalComments: String?
 )

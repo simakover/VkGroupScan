@@ -11,4 +11,12 @@
         app:showAsAction="ifRoom"
         tools:targetApi="o" />
 
+    <item
+        android:id="@+id/refresh_comments"
+        android:icon="@drawable/ic_pencil"
+        android:iconTint="@color/white"
+        android:title="refresh comments"
+        app:showAsAction="ifRoom"
+        tools:targetApi="o" />
+
 </menu>

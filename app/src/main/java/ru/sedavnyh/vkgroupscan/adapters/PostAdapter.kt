@@ -31,10 +31,10 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
         fun bind(post: Post, dao : VkDao) {
 
-            binding.titleTextView.text = post.GroupName
+            binding.titleTextView.text = post.groupName
             binding.descriptionTextView.text = post.text
-            binding.groupAvatar.load(post.GroupAvatar)
-
+            binding.foundedLinks.text = post.totalComments
+            binding.groupAvatar.load(post.groupAvatar)
             binding.titleTextView.setOnClickListener {
                 val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
                 val intents = Intent(Intent.ACTION_VIEW, uris)
@@ -66,11 +66,11 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.MyViewHolder {
-        return PostAdapter.MyViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        return MyViewHolder.from(parent)
     }
 
-    override fun onBindViewHolder(holder: PostAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         holder.bind(dataList[position], vkDao)
     }

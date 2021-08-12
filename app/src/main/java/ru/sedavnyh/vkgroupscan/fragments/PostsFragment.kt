@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,22 +16,24 @@ import ru.sedavnyh.vkgroupscan.data.network.Api
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
 import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
+import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
+import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
 import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
+import ru.sedavnyh.vkgroupscan.util.Constants.THREAD_ITEMS_COUNT
 import toothpick.Toothpick
 import javax.inject.Inject
 
 class PostsFragment : Fragment() {
 
     @Inject
-    lateinit var vkDao : VkDao
+    lateinit var vkDao: VkDao
 
     @Inject
-    lateinit var vkApi : Api
+    lateinit var vkApi: Api
 
     private var _binding: FragmentPostsBinding? = null
-    private val binding get() =_binding!!
+    private val binding get() = _binding!!
     private val mAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(
@@ -45,21 +46,9 @@ class PostsFragment : Fragment() {
         binding.postsRecyclerView.adapter = mAdapter
         binding.postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        GlobalScope.launch {
-            val groups = vkDao.selectGroups()
-            if (groups.isNullOrEmpty()) {
-                var group = Group(-140579116, 0, "скрины из кетайских пopномультеков 0.2", "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1")
-                vkDao.insertGroup(group)
+        checkGroupsExists()
 
-                group = Group(-192370022, 0, "a slice of doujin", "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1")
-                vkDao.insertGroup(group)
-
-                group = Group(-184665352, 0, "doujin cap", "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1")
-                vkDao.insertGroup(group)
-            }
-        }
-
-        vkDao.selectPosts().observe(viewLifecycleOwner,{
+        vkDao.selectPosts().observe(viewLifecycleOwner, {
             mAdapter.setData(it)
         })
 
@@ -74,12 +63,53 @@ class PostsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.posts_menu, menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.refresh_groups ->
                 insertIntoDb()
+            R.id.refresh_comments ->
+                refreshComments()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun refreshComments() {
+        Log.d("inserting comment", "start")
+        GlobalScope.launch(Dispatchers.Main) {
+            vkDao.deleteComments()
+            val posts = vkDao.selectPostsForComments()
+
+            posts.map { post ->
+                var summaryComment = ""
+                val loadedComments = vkApi.wallGetComments(
+                    ACCESS_TOKEN,
+                    API_VERSION,
+                    post.ownerId.toString(),
+                    post.id.toString(),
+                    THREAD_ITEMS_COUNT
+                )
+                loadedComments.response?.items?.map {
+                    summaryComment = summaryComment + System.lineSeparator()+ it.text
+
+                    vkDao.insertComment(it)
+                    it.respondThread?.items?.map { respComm ->
+                        val comment = Comment(
+                            respComm.id,
+                            respComm.fromId,
+                            respComm.ownerId,
+                            respComm.postId,
+                            respComm.text,
+                            RespondThread(null)
+                        )
+                        summaryComment = summaryComment + System.lineSeparator()+ respComm.text
+                        vkDao.insertComment(comment)
+                    }
+                }
+                post.totalComments = summaryComment
+                vkDao.insertPost(post)
+            }
+        }
     }
 
     private fun insertIntoDb() {
@@ -90,26 +120,57 @@ class PostsFragment : Fragment() {
                 Thread.sleep(500)
 
                 if (group.postCount < response?.count!!) {
-                    var loadCount = response.count!! - group.postCount
+                    var loadCount = response.count!! - group.postCount + 1
 
                     if (loadCount > 100)
                         loadCount = 100
 
                     group.postCount = response.count!!
 
-                    response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, group.id.toString(), loadCount.toString()).response
+                    response =
+                        vkApi.wallGet(ACCESS_TOKEN, API_VERSION, group.id.toString(), loadCount.toString()).response
                     Thread.sleep(500)
 
                     response?.posts?.map { post ->
-                        Log.d("inserting", "${post.id}")
-                        post.GroupAvatar = group.avatar
-                        post.GroupName = group.title
+                        post.groupAvatar = group.avatar
+                        post.groupName = group.title
                         vkDao.insertPost(post)
                     }
                     vkDao.updateGroup(group)
                 }
             }
-            Toast.makeText(requireContext(),"Done",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Done", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun checkGroupsExists() {
+        GlobalScope.launch {
+            val groups = vkDao.selectGroups()
+            if (groups.isNullOrEmpty()) {
+                var group = Group(
+                    -140579116,
+                    15940,
+                    "скрины из кетайских пopномультеков 0.2",
+                    "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
+                )
+                vkDao.insertGroup(group)
+
+                group = Group(
+                    -192370022,
+                    2080,
+                    "a slice of doujin",
+                    "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
+                )
+                vkDao.insertGroup(group)
+
+                group = Group(
+                    -184665352,
+                    1590,
+                    "doujin cap",
+                    "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
+                )
+                vkDao.insertGroup(group)
+            }
         }
     }
 }

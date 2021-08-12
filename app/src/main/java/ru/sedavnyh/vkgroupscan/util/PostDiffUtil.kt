@@ -3,10 +3,10 @@ package ru.sedavnyh.vkgroupscan.util
 import androidx.recyclerview.widget.DiffUtil
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 
-class PostDiffUtil (
+class PostDiffUtil(
     private val oldList: List<Post>,
     private val newList: List<Post>
-): DiffUtil.Callback() {
+) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
         return oldList.size
@@ -21,6 +21,6 @@ class PostDiffUtil (
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
+        return oldList[oldItemPosition].id == newList[newItemPosition].id && oldList[oldItemPosition].totalComments == newList[newItemPosition].totalComments
     }
 }
