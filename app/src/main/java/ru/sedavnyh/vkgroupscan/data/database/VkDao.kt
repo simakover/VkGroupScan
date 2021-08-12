@@ -15,6 +15,9 @@ interface VkDao {
     @Query("SELECT * FROM POSTS_TABLE")
     fun selectPosts() : LiveData<List<Post>>
 
+    @Delete
+    suspend fun deletePost(post: Post)
+
     //groups
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroup(group: Group)
