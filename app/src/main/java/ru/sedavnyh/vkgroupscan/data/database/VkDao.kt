@@ -1,5 +1,6 @@
 package ru.sedavnyh.vkgroupscan.data.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.reactivex.rxjava3.core.Single
 import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
@@ -12,8 +13,7 @@ interface VkDao {
     suspend fun insertPost(post: Post)
 
     @Query("SELECT * FROM POSTS_TABLE")
-    suspend fun selectPosts() : List<Post>
-
+    fun selectPosts() : LiveData<List<Post>>
 
     //groups
     @Insert(onConflict = OnConflictStrategy.REPLACE)

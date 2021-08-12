@@ -3,16 +3,21 @@ package ru.sedavnyh.vkgroupscan.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.sedavnyh.vkgroupscan.R
+import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
 import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.data.network.Api
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
 import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
+import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
 import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
 import toothpick.Toothpick
@@ -20,14 +25,15 @@ import javax.inject.Inject
 
 class PostsFragment : Fragment() {
 
-    private var _binding: FragmentPostsBinding? = null
-    private val binding get() =_binding!!
-
     @Inject
     lateinit var vkDao : VkDao
 
     @Inject
     lateinit var vkApi : Api
+
+    private var _binding: FragmentPostsBinding? = null
+    private val binding get() =_binding!!
+    private val mAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +42,27 @@ class PostsFragment : Fragment() {
         _binding = FragmentPostsBinding.inflate(inflater, container, false)
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         setHasOptionsMenu(true)
+        binding.postsRecyclerView.adapter = mAdapter
+        binding.postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         GlobalScope.launch {
             val groups = vkDao.selectGroups()
             if (groups.isNullOrEmpty()) {
-                var group = Group(-140579116, 15900)
+                var group = Group(-140579116, 0, "скрины из кетайских пopномультеков 0.2", "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1")
+                vkDao.insertGroup(group)
+
+                group = Group(-192370022, 0, "a slice of doujin", "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1")
+                vkDao.insertGroup(group)
+
+                group = Group(-184665352, 0, "doujin cap", "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1")
                 vkDao.insertGroup(group)
             }
         }
 
-        binding.selectButton.setOnClickListener {
-            selectFromDb()
-        }
+        vkDao.selectPosts().observe(viewLifecycleOwner,{
+            mAdapter.setData(it)
+        })
+
         return binding.root
     }
 
@@ -68,34 +83,33 @@ class PostsFragment : Fragment() {
     }
 
     private fun insertIntoDb() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Main) {
             val groups = vkDao.selectGroups()
-            groups.map {
-                var response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, it.id.toString(), "1").response
-                Thread.sleep(1000)
+            groups.map { group ->
+                var response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, group.id.toString(), "1").response
+                Thread.sleep(500)
 
-                if (it.postCount < response?.count!!) {
-                    var loadCount = response.count!! - it.postCount
-                    it.postCount = response.count!!
+                if (group.postCount < response?.count!!) {
+                    var loadCount = response.count!! - group.postCount
 
-                    response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, it.id.toString(), loadCount.toString()).response
-                    Thread.sleep(1000)
+                    if (loadCount > 100)
+                        loadCount = 100
+
+                    group.postCount = response.count!!
+
+                    response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, group.id.toString(), loadCount.toString()).response
+                    Thread.sleep(500)
 
                     response?.posts?.map { post ->
                         Log.d("inserting", "${post.id}")
+                        post.GroupAvatar = group.avatar
+                        post.GroupName = group.title
                         vkDao.insertPost(post)
                     }
-
-                    vkDao.updateGroup(it)
+                    vkDao.updateGroup(group)
                 }
             }
-        }
-    }
-
-    private fun selectFromDb() {
-        GlobalScope.launch {
-            val posts = vkDao.selectPosts()
-            Log.d("selectFromDb", "${posts.size}")
+            Toast.makeText(requireContext(),"Done",Toast.LENGTH_SHORT).show()
         }
     }
 }

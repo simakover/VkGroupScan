@@ -8,5 +8,7 @@ import ru.sedavnyh.vkgroupscan.util.Constants.GROUPS_TABLE
 data class Group (
     @PrimaryKey(autoGenerate = false)
     val id: Int,
-    var postCount : Int
+    var postCount : Int,
+    var title: String,
+    var avatar: String
 )
