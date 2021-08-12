@@ -13,7 +13,7 @@ interface VkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPost(post: Post)
 
-    @Query("SELECT * FROM POSTS_TABLE")
+    @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED is NULL ORDER BY DATE DESC")
     fun selectPosts() : LiveData<List<Post>>
 
     @Query("SELECT * FROM POSTS_TABLE")
