@@ -12,4 +12,5 @@ object Constants {
 
     const val DATABASE_NAME = "vk_database"
     const val POSTS_TABLE = "posts_table"
+    const val GROUPS_TABLE = "groups_table"
 }

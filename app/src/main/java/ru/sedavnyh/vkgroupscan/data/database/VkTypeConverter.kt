@@ -10,12 +10,12 @@ class VkTypeConverter {
     var gson = Gson()
 
     @TypeConverter
-    fun listAttachmentsToString(list: List<Attachment>): String {
+    fun listAttachmentsToString(list: List<Attachment>?): String? {
         return gson.toJson(list)
     }
 
     @TypeConverter
-    fun stringToListAttachments(data: String): List<Attachment> {
+    fun stringToListAttachments(data: String?): List<Attachment>? {
         val listType = object : TypeToken<List<Attachment>>() {}.type
         return gson.fromJson(data, listType)
     }

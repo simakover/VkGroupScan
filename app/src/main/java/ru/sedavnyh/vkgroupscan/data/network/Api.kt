@@ -9,6 +9,7 @@ interface Api {
     suspend fun wallGet(
         @Query("access_token") accessToken: String,
         @Query("v") apiVersion: String,
-        @Query("owner_id") ownerId: String
+        @Query("owner_id") ownerId: String,
+        @Query("count") count: String
     ): WallGetResponse
 }

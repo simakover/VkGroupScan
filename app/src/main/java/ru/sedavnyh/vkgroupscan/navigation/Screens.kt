@@ -4,5 +4,5 @@ import com.github.terrakok.cicerone.androidx.FragmentScreen
 import ru.sedavnyh.vkgroupscan.fragments.PostsFragment
 
 object Screens {
-    fun PostsScreen() = FragmentScreen { PostsFragment() }
+    fun postsScreen() = FragmentScreen { PostsFragment() }
 }

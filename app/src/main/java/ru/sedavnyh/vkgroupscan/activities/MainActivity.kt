@@ -28,6 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))
         navigatorHolder.setNavigator(navigator)
-        router.newRootScreen(Screens.PostsScreen())
+        router.newRootScreen(Screens.postsScreen())
     }
 }

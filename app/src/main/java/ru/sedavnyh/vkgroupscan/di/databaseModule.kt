@@ -3,8 +3,11 @@ package ru.sedavnyh.vkgroupscan.di
 
 import android.content.Context
 import androidx.room.Room
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.data.database.VkDatabase
+import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
 import ru.sedavnyh.vkgroupscan.util.Constants
 import toothpick.ktp.binding.module
 
@@ -17,5 +20,6 @@ fun databaseModule(context: Context) = module {
     ).build()
 
     val dao = db.vkDao()
+
     bind(VkDao::class.java).toInstance(dao)
 }
