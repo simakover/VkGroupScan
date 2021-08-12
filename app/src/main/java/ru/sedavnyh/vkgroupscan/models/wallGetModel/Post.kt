@@ -10,7 +10,7 @@ import ru.sedavnyh.vkgroupscan.util.Constants.POSTS_TABLE
 data class Post(
     @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
-    val id: Int?/*,
+    val id: Int?,
     @SerializedName("attachments")
     val attachments: List<Attachment>?,
     @SerializedName("date")
@@ -22,5 +22,5 @@ data class Post(
     @SerializedName("marked_as_ads")
     val markedAsAds: Int?,
     @SerializedName("text")
-    val text: String?*/
+    val text: String?
 )

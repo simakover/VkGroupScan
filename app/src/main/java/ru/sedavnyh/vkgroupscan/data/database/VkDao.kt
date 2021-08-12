@@ -10,8 +10,8 @@ import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 @Dao
 interface VkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPost(post: Post)
+    suspend fun insertPost(post: Post)
 
     @Query("SELECT * FROM POSTS_TABLE")
-    fun selectPosts() : Single<List<Post>>
+    suspend fun selectPosts() : List<Post>
 }
