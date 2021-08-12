@@ -2,41 +2,32 @@ package ru.sedavnyh.vkgroupscan.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.github.terrakok.cicerone.Navigator
+import com.github.terrakok.cicerone.NavigatorHolder
+import com.github.terrakok.cicerone.Router
+import com.github.terrakok.cicerone.androidx.AppNavigator
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.data.network.ApiModule
-import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
-import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
+import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
+import ru.sedavnyh.vkgroupscan.navigation.Screens
+import toothpick.Toothpick
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private var compDisp = CompositeDisposable()
+    @Inject
+    lateinit var router : Router
+
+    @Inject
+    lateinit var navigatorHolder : NavigatorHolder
+
+    private val navigator: Navigator = AppNavigator(this, R.id.flow_container)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val response = ApiModule().getApiService().wallGet(ACCESS_TOKEN,API_VERSION,"-140579116")
-
-        compDisp.add(
-            response
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                //.doOnSubscribe { viewState.showProgressBar(true) }
-                .subscribe({
-                    //viewState.showProgressBar(false)
-                    if (it == null) {
-                        Log.d("response", "No found")
-                    } else {
-                        Log.d("response", "count = ${it.response?.count}")
-                    }
-                }, {
-                    Log.d("response", it.toString())
-                })
-        )
-
+        Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))
+        navigatorHolder.setNavigator(navigator)
+        router.newRootScreen(Screens.PostsScreen())
     }
 }

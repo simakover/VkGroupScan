@@ -8,4 +8,8 @@ object Constants {
     const val OFFSET = 100
     const val TIME_OUT = 15L
     const val DATABASE_VERSION = 1
+
+
+    const val DATABASE_NAME = "vk_database"
+    const val POSTS_TABLE = "posts_table"
 }
