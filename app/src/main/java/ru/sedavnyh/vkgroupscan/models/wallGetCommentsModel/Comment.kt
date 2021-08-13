@@ -18,7 +18,7 @@ data class Comment(
     @SerializedName("post_id")
     val postId: Int?,
     @SerializedName("text")
-    val text: String?,
+    var text: String?,
     @SerializedName("thread")
     val respondThread: RespondThread?
 )

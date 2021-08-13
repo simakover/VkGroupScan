@@ -13,5 +13,5 @@ data class RespondComment(
     @SerializedName("post_id")
     val postId: Int?,
     @SerializedName("text")
-    val text: String?
+    var text: String?
 )

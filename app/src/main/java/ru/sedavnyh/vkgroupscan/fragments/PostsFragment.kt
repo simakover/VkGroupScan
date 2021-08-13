@@ -21,6 +21,7 @@ import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
 import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
 import ru.sedavnyh.vkgroupscan.util.Constants.THREAD_ITEMS_COUNT
+import ru.sedavnyh.vkgroupscan.util.TextOperations
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -89,9 +90,14 @@ class PostsFragment : Fragment() {
                     post.id.toString(),
                     THREAD_ITEMS_COUNT
                 )
+                Thread.sleep(500)
                 loadedComments.response?.items?.map {
-                    summaryComment = summaryComment + System.lineSeparator()+ it.text
 
+                    it.text = TextOperations().cleanComment(it.text)
+                    if (it.text != null) {
+                        Log.d("Add to summary", "${it.text}")
+                        summaryComment = summaryComment.trim() + System.lineSeparator() + it.text
+                    }
                     vkDao.insertComment(it)
                     it.respondThread?.items?.map { respComm ->
                         val comment = Comment(
@@ -102,13 +108,17 @@ class PostsFragment : Fragment() {
                             respComm.text,
                             RespondThread(null)
                         )
-                        summaryComment = summaryComment + System.lineSeparator()+ respComm.text
+                        respComm.text = TextOperations().cleanComment(respComm.text)
+                        if (respComm.text != null) {
+                            summaryComment = summaryComment.trim() + System.lineSeparator() + respComm.text
+                        }
                         vkDao.insertComment(comment)
                     }
                 }
-                post.totalComments = summaryComment
+                post.totalComments = summaryComment.trim()
                 vkDao.insertPost(post)
             }
+            Toast.makeText(requireContext(), "Done", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -149,7 +159,7 @@ class PostsFragment : Fragment() {
             if (groups.isNullOrEmpty()) {
                 var group = Group(
                     -140579116,
-                    15940,
+                    0,
                     "скрины из кетайских пopномультеков 0.2",
                     "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
                 )
@@ -157,7 +167,7 @@ class PostsFragment : Fragment() {
 
                 group = Group(
                     -192370022,
-                    2080,
+                    0,
                     "a slice of doujin",
                     "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
                 )
@@ -165,7 +175,7 @@ class PostsFragment : Fragment() {
 
                 group = Group(
                     -184665352,
-                    1590,
+                    0,
                     "doujin cap",
                     "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
                 )
