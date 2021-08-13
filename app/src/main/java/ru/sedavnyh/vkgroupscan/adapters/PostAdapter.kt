@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -30,11 +31,15 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
 
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(post: Post, dao : VkDao) {
-
+        fun bind(post: Post, dao: VkDao) {
             binding.titleTextView.text = post.groupName
+
             binding.descriptionTextView.text = post.text
+            binding.descriptionTextView.fixTextSelection()
+
             binding.foundedLinks.text = post.totalComments
+            binding.foundedLinks.fixTextSelection()
+
             binding.groupAvatar.load(post.groupAvatar)
             binding.titleTextView.setOnClickListener {
                 val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
@@ -42,18 +47,21 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
                 val b = Bundle()
                 b.putBoolean("new_window", true)
                 intents.putExtras(b)
-                startActivity(binding.root.context, intents,b)
+                startActivity(binding.root.context, intents, b)
             }
-            binding.deletePostButton.setOnClickListener{
+            binding.deletePostButton.setOnClickListener {
                 GlobalScope.launch {
                     dao.deletePost(post)
                 }
             }
-
-            post.attachments?.first()?.photo?.sizes?.map {
-                if (it.type == "x") {
-                    binding.image1.load(it.url)
+            try {
+                post.attachments?.first()?.photo?.sizes?.map {
+                    if (it.type == "x") {
+                        binding.image1.load(it.url)
+                    }
                 }
+            } catch (e: Exception) {
+                Log.d("exception", e.toString())
             }
         }
 
