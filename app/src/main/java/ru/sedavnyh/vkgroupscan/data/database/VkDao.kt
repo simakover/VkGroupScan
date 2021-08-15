@@ -13,10 +13,7 @@ interface VkDao {
     suspend fun insertPost(post: Post)
 
     @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED is NULL ORDER BY DATE DESC")
-    fun selectPosts() : LiveData<List<Post>>
-
-    @Query("SELECT * FROM POSTS_TABLE")
-    suspend fun selectPostsForComments() : List<Post>
+    suspend fun selectPosts() : List<Post>
 
     @Query("SELECT COUNT(1) FROM POSTS_TABLE")
     suspend fun countPosts(): Int

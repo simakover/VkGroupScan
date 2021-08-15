@@ -53,7 +53,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Image Loading library Coil
-    implementation "io.coil-kt:coil:0.13.0"
+    implementation "io.coil-kt:coil:1.2.0"
 
     // Toothpick
     implementation("com.github.stephanenicolas.toothpick:toothpick-runtime:3.1.0")
@@ -68,4 +68,10 @@ dependencies {
 
     // Cicerone
     implementation("com.github.terrakok:cicerone:7.1")
+
+    // moxy
+    implementation "com.github.moxy-community:moxy:2.2.2"
+    kapt "com.github.moxy-community:moxy-compiler:2.2.2"
+    implementation "com.github.moxy-community:moxy-android:2.2.2"
+    implementation "com.github.moxy-community:moxy-androidx:2.2.2"
 }

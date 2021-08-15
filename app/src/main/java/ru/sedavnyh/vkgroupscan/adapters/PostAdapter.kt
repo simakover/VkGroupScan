@@ -5,82 +5,67 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import ru.sedavnyh.vkgroupscan.data.database.VkDao
-import ru.sedavnyh.vkgroupscan.databinding.PostRowBinding
-import ru.sedavnyh.vkgroupscan.di.Scopes
+import kotlinx.android.synthetic.main.post_row.view.*
+import ru.sedavnyh.vkgroupscan.R
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
-import toothpick.Toothpick
-import javax.inject.Inject
 
-class PostAdapter : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
-
-    @Inject
-    lateinit var vkDao: VkDao
+class PostAdapter(
+    val onDeleteClick: (Post) -> Unit
+) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<Post>()
 
-    class MyViewHolder(private val binding: PostRowBinding) :
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(post: Post) {
 
-        RecyclerView.ViewHolder(binding.root) {
+            itemView.title_text_view.text = post.groupName
 
-        fun bind(post: Post, dao: VkDao) {
-            binding.titleTextView.text = post.groupName
+            itemView.description_text_view.text = post.text
+            itemView.description_text_view.fixTextSelection()
 
-            binding.descriptionTextView.text = post.text
-            binding.descriptionTextView.fixTextSelection()
+            itemView.founded_links.text = post.totalComments
+            itemView.founded_links.fixTextSelection()
 
-            binding.foundedLinks.text = post.totalComments
-            binding.foundedLinks.fixTextSelection()
-
-            binding.groupAvatar.load(post.groupAvatar)
-            binding.titleTextView.setOnClickListener {
+            itemView.group_avatar.load(post.groupAvatar)
+            itemView.title_text_view.setOnClickListener {
                 val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
                 val intents = Intent(Intent.ACTION_VIEW, uris)
                 val b = Bundle()
                 b.putBoolean("new_window", true)
                 intents.putExtras(b)
-                startActivity(binding.root.context, intents, b)
+                startActivity(itemView.context, intents, b)
             }
-            binding.deletePostButton.setOnClickListener {
-                GlobalScope.launch {
-                    dao.deletePost(post)
-                }
+
+            itemView.delete_post_button.setOnClickListener {
+                onDeleteClick.invoke(post)
             }
+
             try {
                 post.attachments?.first()?.photo?.sizes?.map {
                     if (it.type == "x") {
-                        binding.image1.load(it.url)
+                        itemView.image1.load(it.url)
                     }
                 }
             } catch (e: Exception) {
                 Log.d("exception", e.toString())
             }
         }
-
-        companion object {
-            fun from(parent: ViewGroup): MyViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = PostRowBinding.inflate(layoutInflater, parent, false)
-                return MyViewHolder(binding)
-            }
-        }
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.MyViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.post_row, parent, false)
+        return MyViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
-        holder.bind(dataList[position], vkDao)
+        holder.bind(dataList[position])
     }
 
     override fun getItemCount(): Int {
