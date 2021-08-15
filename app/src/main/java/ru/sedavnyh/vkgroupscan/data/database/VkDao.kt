@@ -2,8 +2,7 @@ package ru.sedavnyh.vkgroupscan.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import io.reactivex.rxjava3.core.Single
-import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
+import ru.sedavnyh.vkgroupscan.models.entities.Group
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 
@@ -18,6 +17,9 @@ interface VkDao {
 
     @Query("SELECT * FROM POSTS_TABLE")
     suspend fun selectPostsForComments() : List<Post>
+
+    @Query("SELECT COUNT(1) FROM POSTS_TABLE")
+    suspend fun countPosts(): Int
 
     @Delete
     suspend fun deletePost(post: Post)
@@ -38,4 +40,7 @@ interface VkDao {
 
     @Query("DELETE FROM COMMENTS_TABLE")
     suspend fun deleteComments()
+
+    @Query("SELECT COUNT(1) FROM COMMENTS_TABLE")
+    suspend fun countComments(): Int
 }

@@ -1,4 +1,4 @@
-package ru.sedavnyh.vkgroupscan.models.groupsModel
+package ru.sedavnyh.vkgroupscan.models.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

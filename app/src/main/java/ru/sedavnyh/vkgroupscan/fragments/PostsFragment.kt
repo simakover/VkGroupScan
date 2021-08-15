@@ -1,11 +1,14 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,7 +18,7 @@ import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.data.network.Api
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
-import ru.sedavnyh.vkgroupscan.models.groupsModel.Group
+import ru.sedavnyh.vkgroupscan.models.entities.Group
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
@@ -37,6 +40,7 @@ class PostsFragment : Fragment() {
     private val binding get() = _binding!!
     private val mAdapter by lazy { PostAdapter() }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,10 +54,26 @@ class PostsFragment : Fragment() {
         checkGroupsExists()
 
         vkDao.selectPosts().observe(viewLifecycleOwner, {
+            var lastItem : Int
+            try {
+                lastItem = getCurrentItem(binding.postsRecyclerView)
+            } catch (e: Exception) {
+                lastItem = 0
+            }
             mAdapter.setData(it)
+            try {
+                binding.postsRecyclerView.scrollToPosition(lastItem + 1)
+            } catch (e: Exception) {
+                binding.postsRecyclerView.scrollToPosition(0)
+            }
         })
 
         return binding.root
+    }
+
+    private fun getCurrentItem(recyclerView: RecyclerView): Int {
+        return (recyclerView.layoutManager as LinearLayoutManager)
+            .findFirstVisibleItemPosition()
     }
 
     override fun onDestroyView() {
@@ -78,6 +98,7 @@ class PostsFragment : Fragment() {
     private fun refreshComments() {
         Log.d("inserting comment", "start")
         GlobalScope.launch(Dispatchers.Main) {
+            val loadedCommentsBefore = vkDao.countComments()
             vkDao.deleteComments()
             val posts = vkDao.selectPostsForComments()
 
@@ -118,13 +139,15 @@ class PostsFragment : Fragment() {
                 post.totalComments = summaryComment.trim()
                 vkDao.insertPost(post)
             }
-            Toast.makeText(requireContext(), "Done", Toast.LENGTH_SHORT).show()
+            val loadedCommentsAfter = vkDao.countComments()
+            Toast.makeText(requireContext(), "Loaded comments: ${loadedCommentsAfter - loadedCommentsBefore}", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun insertIntoDb() {
         GlobalScope.launch(Dispatchers.Main) {
             val groups = vkDao.selectGroups()
+            val loadedPostsBefore = vkDao.countPosts()
             groups.map { group ->
                 var response = vkApi.wallGet(ACCESS_TOKEN, API_VERSION, group.id.toString(), "1").response
                 Thread.sleep(500)
@@ -149,7 +172,8 @@ class PostsFragment : Fragment() {
                     vkDao.updateGroup(group)
                 }
             }
-            Toast.makeText(requireContext(), "Done", Toast.LENGTH_SHORT).show()
+            val loadedPostsAfter = vkDao.countPosts()
+            Toast.makeText(requireContext(), "Loaded posts: ${loadedPostsAfter - loadedPostsBefore}", Toast.LENGTH_SHORT).show()
         }
     }
 
