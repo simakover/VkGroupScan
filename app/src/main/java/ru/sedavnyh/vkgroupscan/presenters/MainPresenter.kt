@@ -147,7 +147,7 @@ class MainPresenter @Inject constructor(
     fun deletePost(post: PostEntity, position: Int) {
         GlobalScope.launch(Dispatchers.Main) {
             repository.local.deletePost(post)
-            lastItem = position - 1
+            lastItem = position
             setData()
         }
     }
