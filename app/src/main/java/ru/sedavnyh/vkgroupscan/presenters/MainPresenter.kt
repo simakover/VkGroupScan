@@ -30,6 +30,11 @@ class MainPresenter @Inject constructor(
     var lastItem : Int = 0
     lateinit var notification: NotificationCompat.Builder
 
+    init{
+        checkGroupsExists()
+        setData()
+    }
+
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
             val loadedCommentsBefore = repository.local.countComments()

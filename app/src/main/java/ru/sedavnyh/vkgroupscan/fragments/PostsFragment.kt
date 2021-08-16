@@ -66,9 +66,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         binding.postsRecyclerView.adapter = mAdapter
         binding.postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        mainPresenter.checkGroupsExists()
-        mainPresenter.setData()
-
         notificationManager = NotificationManagerCompat.from(requireContext())
 
         return binding.root
