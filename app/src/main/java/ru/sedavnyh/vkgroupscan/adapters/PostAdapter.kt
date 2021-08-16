@@ -20,13 +20,14 @@ import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
 
 class PostAdapter(
     val onDeleteClick: (PostEntity) -> Unit,
-    val onTitleClick: (PostEntity) -> Unit
+    val onTitleClick: (PostEntity) -> Unit,
+    val onInnerImageClick: (String) -> Unit,
 ) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val iAdapter by lazy { ImageAdapter() }
+        private val iAdapter by lazy { ImageAdapter(onImageClick = onInnerImageClick) }
 
         fun bind(post: PostEntity) {
 

@@ -35,7 +35,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
 
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
-    private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost, mainPresenter::goToPostPage) }
+    private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost, mainPresenter::goToPostPage, mainPresenter::navigateToImage) }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(

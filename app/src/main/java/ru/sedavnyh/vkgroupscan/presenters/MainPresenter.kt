@@ -3,6 +3,7 @@ package ru.sedavnyh.vkgroupscan.presenters
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
+import ru.sedavnyh.vkgroupscan.navigation.Screens
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
     private val repository: Repository,
-    private val mapper: FromResponseToEntityMapper
+    private val mapper: FromResponseToEntityMapper,
+    private var router : Router
 ) : MvpPresenter<MainView>() {
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
@@ -158,6 +161,10 @@ class MainPresenter @Inject constructor(
         bundle.putBoolean("new_window", true)
         intents.putExtras(bundle)
         viewState.goToPostPage(intents, bundle)
+    }
+
+    fun navigateToImage(link : String) {
+        router.navigateTo(Screens.imageScreen(link))
     }
 
     fun exportPosts() {
