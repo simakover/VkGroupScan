@@ -1,12 +1,9 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import androidx.core.app.NotificationCompat
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,7 +19,6 @@ import ru.sedavnyh.vkgroupscan.navigation.Screens
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
-import java.text.ParsePosition
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -32,12 +28,15 @@ class MainPresenter @Inject constructor(
 ) : MvpPresenter<MainView>() {
 
     var lastItem : Int = 0
+    lateinit var notification: NotificationCompat.Builder
 
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
             val loadedCommentsBefore = repository.local.countComments()
             repository.local.deleteComments()
             val posts = repository.local.selectPosts()
+            var postCompleted = 0
+            viewState.createNotification("Загрузка комментариев")
 
             posts.map { post ->
                 var summaryComment : MutableList<String> = mutableListOf()
@@ -71,10 +70,14 @@ class MainPresenter @Inject constructor(
                 }
                 post.totalComments = summaryComment
                 repository.local.insertPost(post)
+
+                postCompleted += 1
+                viewState.updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)
             }
             val loadedCommentsAfter = repository.local.countComments()
             setData()
-            viewState.sendToast("Loaded comments: ${loadedCommentsAfter - loadedCommentsBefore}")
+            viewState.updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
+            viewState.sendToast("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
         }
     }
 
@@ -82,6 +85,8 @@ class MainPresenter @Inject constructor(
         GlobalScope.launch(Dispatchers.Main) {
             val groups = repository.local.selectGroups()
             val loadedPostsBefore = repository.local.countPosts()
+            var groupsCompleted = 0
+            viewState.createNotification("Загрузка постов")
             groups.map { group ->
                 var offset = 0
                 var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
@@ -113,10 +118,13 @@ class MainPresenter @Inject constructor(
                     offset += loadCount
                     repository.local.updateGroup(group)
                 }
+                groupsCompleted += 1
+                viewState.updateNotification("Групп обработано: $groupsCompleted/${groups.size}", groupsCompleted, groups.size)
             }
             val loadedPostsAfter = repository.local.countPosts()
             setData()
-            viewState.sendToast("Loaded posts: ${loadedPostsAfter - loadedPostsBefore}")
+            viewState.updateNotification("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
+            viewState.sendToast("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
         }
     }
 
