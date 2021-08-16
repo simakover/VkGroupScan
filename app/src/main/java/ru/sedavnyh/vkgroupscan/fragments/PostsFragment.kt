@@ -1,10 +1,12 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moxy.MvpAppCompatFragment
@@ -15,7 +17,6 @@ import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import ru.sedavnyh.vkgroupscan.presenters.MainPresenter
 import ru.sedavnyh.vkgroupscan.view.MainView
 import toothpick.Toothpick
@@ -34,7 +35,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
 
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
-    private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost) }
+    private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost, mainPresenter::goToPostPage) }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -83,6 +84,10 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         val lastItem = getCurrentItem(binding.postsRecyclerView)
         mAdapter.setData(posts)
         binding.postsRecyclerView.scrollToPosition(lastItem + 1)
+    }
+
+    override fun goToPostPage(intent: Intent, bundle: Bundle) {
+        ContextCompat.startActivity(requireContext(), intent, bundle)
     }
 
     private fun getCurrentItem(recyclerView: RecyclerView): Int {

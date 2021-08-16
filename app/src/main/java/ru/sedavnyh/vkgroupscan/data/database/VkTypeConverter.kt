@@ -8,19 +8,7 @@ import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Attachment
 
 class VkTypeConverter {
-
     var gson = Gson()
-
-    @TypeConverter
-    fun listAttachmentsToString(list: List<Attachment>?): String? {
-        return gson.toJson(list)
-    }
-
-    @TypeConverter
-    fun stringToListAttachments(data: String?): List<Attachment>? {
-        val listType = object : TypeToken<List<Attachment>>() {}.type
-        return gson.fromJson(data, listType)
-    }
 
     // comments
     @TypeConverter

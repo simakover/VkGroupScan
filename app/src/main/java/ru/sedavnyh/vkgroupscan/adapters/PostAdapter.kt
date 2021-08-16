@@ -10,13 +10,15 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.CircleCropTransformation
 import kotlinx.android.synthetic.main.post_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
 
 class PostAdapter(
-    val onDeleteClick: (PostEntity) -> Unit
+    val onDeleteClick: (PostEntity) -> Unit,
+    val onTitleClick: (PostEntity) -> Unit
 ) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
@@ -35,14 +37,15 @@ class PostAdapter(
             itemView.founded_links.text = summaryComment
             itemView.founded_links.fixTextSelection()
 
-            itemView.group_avatar.load(post.groupAvatar)
+            itemView.group_avatar.load(post.groupAvatar) {
+                transformations(CircleCropTransformation())
+            }
             itemView.title_text_view.setOnClickListener {
-                val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
-                val intents = Intent(Intent.ACTION_VIEW, uris)
-                val b = Bundle()
-                b.putBoolean("new_window", true)
-                intents.putExtras(b)
-                startActivity(itemView.context, intents, b)
+                onTitleClick.invoke(post)
+            }
+
+            itemView.group_avatar.setOnClickListener {
+                onTitleClick.invoke(post)
             }
 
             itemView.delete_post_button.setOnClickListener {

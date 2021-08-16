@@ -1,6 +1,8 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -147,6 +149,15 @@ class MainPresenter @Inject constructor(
             val posts = repository.local.selectPosts()
             viewState.setDataToRecycler(posts)
         }
+    }
+
+    fun goToPostPage(post: PostEntity) {
+        val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
+        val intents = Intent(Intent.ACTION_VIEW, uris)
+        val bundle = Bundle()
+        bundle.putBoolean("new_window", true)
+        intents.putExtras(bundle)
+        viewState.goToPostPage(intents, bundle)
     }
 
     fun exportPosts() {
