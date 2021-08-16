@@ -34,13 +34,6 @@ class PostAdapter(
             itemView.description_text_view.text = post.text
             itemView.description_text_view.fixTextSelection()
 
-            var summaryComment = ""
-            post.totalComments.map {
-                summaryComment = summaryComment.trim() + System.lineSeparator() + it
-            }
-//            itemView.founded_links.text = summaryComment
-//            itemView.founded_links.fixTextSelection()
-
             itemView.group_avatar.load(post.groupAvatar) {
                 transformations(CircleCropTransformation())
             }
