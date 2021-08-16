@@ -1,19 +1,14 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
-import android.app.PendingIntent
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
-import android.os.SystemClock
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +16,6 @@ import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.activities.MainActivity
 import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
@@ -29,7 +23,6 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.presenters.MainPresenter
 import ru.sedavnyh.vkgroupscan.view.MainView
 import toothpick.Toothpick
-import java.lang.Math.round
 
 class PostsFragment : MvpAppCompatFragment(), MainView {
 

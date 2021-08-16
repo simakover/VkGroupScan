@@ -2,7 +2,6 @@ package ru.sedavnyh.vkgroupscan.view
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.NotificationCompat
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
