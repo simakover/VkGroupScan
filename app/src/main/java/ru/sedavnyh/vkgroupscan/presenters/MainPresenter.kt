@@ -18,6 +18,7 @@ import ru.sedavnyh.vkgroupscan.navigation.Screens
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
+import java.text.ParsePosition
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
@@ -25,6 +26,9 @@ class MainPresenter @Inject constructor(
     private val mapper: FromResponseToEntityMapper,
     private var router : Router
 ) : MvpPresenter<MainView>() {
+
+    var lastItem : Int = 0
+
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
             val loadedCommentsBefore = repository.local.countComments()
@@ -140,9 +144,10 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun deletePost(post: PostEntity) {
+    fun deletePost(post: PostEntity, position: Int) {
         GlobalScope.launch(Dispatchers.Main) {
             repository.local.deletePost(post)
+            lastItem = position - 1
             setData()
         }
     }
@@ -163,7 +168,8 @@ class MainPresenter @Inject constructor(
         viewState.goToPostPage(intents, bundle)
     }
 
-    fun navigateToImage(link : String) {
+    fun navigateToImage(link : String, position: Int) {
+        lastItem = position
         router.navigateTo(Screens.imageScreen(link))
     }
 

@@ -2,16 +2,14 @@ package ru.sedavnyh.vkgroupscan.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import coil.load
-import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.databinding.FragmentImageBinding
-import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 
 class ImageFragment : Fragment() {
 
@@ -28,7 +26,6 @@ class ImageFragment : Fragment() {
     ): View? {
         _binding = FragmentImageBinding.inflate(inflater, container, false)
         binding.fullImageImageView.load(linkImage)
-
         binding.fullImageImageView.setOnClickListener {
             if (uiHided) {
                 showSystemUI()
@@ -38,12 +35,13 @@ class ImageFragment : Fragment() {
         }
 
         activity  = requireActivity() as AppCompatActivity
-        hideSystemUI()
+        activity.supportActionBar?.hide()
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        showSystemUI()
         activity.supportActionBar?.show()
     }
 

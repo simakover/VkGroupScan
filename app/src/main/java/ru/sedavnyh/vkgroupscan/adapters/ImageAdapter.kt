@@ -11,16 +11,17 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.util.LinksDiffUtil
 
 class ImageAdapter(
-    val onImageClick: (String) -> Unit,
+    val onImageClick: (String, Int) -> Unit,
 ) : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
 
     var dataList : List<String> = emptyList()
+    var postPosition : Int = 0
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(link: String) {
             itemView.pic_imageView.load(link)
             itemView.pic_imageView.setOnClickListener {
-                onImageClick.invoke(link)
+                onImageClick.invoke(link, postPosition)
             }
         }
     }
@@ -38,10 +39,12 @@ class ImageAdapter(
         return dataList.size
     }
 
-    fun setData(links: List<String>) {
+    fun setData(links: List<String>, position: Int) {
         val postDiffUtil = LinksDiffUtil(dataList, links)
         val postDiffResult = DiffUtil.calculateDiff(postDiffUtil)
         this.dataList = links
         postDiffResult.dispatchUpdatesTo(this)
+
+        postPosition = position
     }
 }

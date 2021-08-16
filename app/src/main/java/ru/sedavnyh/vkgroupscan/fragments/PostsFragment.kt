@@ -32,7 +32,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             .openScope(APP_SCOPE)
             .getInstance(MainPresenter::class.java)
 
-
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
     private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost, mainPresenter::goToPostPage, mainPresenter::navigateToImage) }
@@ -81,13 +80,16 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
     }
 
     override fun setDataToRecycler(posts: List<PostEntity>) {
-        val lastItem = getCurrentItem(binding.postsRecyclerView)
         mAdapter.setData(posts)
-        binding.postsRecyclerView.scrollToPosition(lastItem + 1)
+        binding.postsRecyclerView.scrollToPosition(mainPresenter.lastItem)
     }
 
     override fun goToPostPage(intent: Intent, bundle: Bundle) {
         ContextCompat.startActivity(requireContext(), intent, bundle)
+    }
+
+    override fun getPosition() {
+        mainPresenter.lastItem = getCurrentItem(binding.postsRecyclerView)
     }
 
     private fun getCurrentItem(recyclerView: RecyclerView): Int {

@@ -1,27 +1,23 @@
 package ru.sedavnyh.vkgroupscan.adapters
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import kotlinx.android.synthetic.main.post_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
+import kotlin.reflect.KFunction1
 
 class PostAdapter(
-    val onDeleteClick: (PostEntity) -> Unit,
+    val onDeleteClick: (PostEntity, Int) -> Unit,
     val onTitleClick: (PostEntity) -> Unit,
-    val onInnerImageClick: (String) -> Unit,
+    val onInnerImageClick: (String, Int) -> Unit,
 ) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
@@ -29,7 +25,7 @@ class PostAdapter(
 
         private val iAdapter by lazy { ImageAdapter(onImageClick = onInnerImageClick) }
 
-        fun bind(post: PostEntity) {
+        fun bind(post: PostEntity, position: Int) {
 
             itemView.title_text_view.text = post.groupName
 
@@ -55,12 +51,12 @@ class PostAdapter(
             }
 
             itemView.delete_post_button.setOnClickListener {
-                onDeleteClick.invoke(post)
+                onDeleteClick.invoke(post, position)
             }
 
             itemView.image_recyclerView.adapter = iAdapter
             itemView.image_recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-            iAdapter.setData(post.images)
+            iAdapter.setData(post.images, position)
         }
     }
 
@@ -70,7 +66,7 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(dataList[position])
+        holder.bind(dataList[position], position)
     }
 
     override fun getItemCount(): Int {
