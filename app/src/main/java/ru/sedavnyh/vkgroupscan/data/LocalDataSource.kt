@@ -1,7 +1,8 @@
 package ru.sedavnyh.vkgroupscan.data
 
 import ru.sedavnyh.vkgroupscan.data.database.VkDao
-import ru.sedavnyh.vkgroupscan.models.entities.Group
+import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import javax.inject.Inject
@@ -9,11 +10,10 @@ import javax.inject.Inject
 class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
 
     //posts
-    suspend fun insertPost(post: Post) {
+    suspend fun insertPost(post: PostEntity) {
         return vkDao.insertPost(post)
     }
-
-    suspend fun selectPostsForComments(): List<Post> {
+    suspend fun selectPosts(): List<PostEntity> {
         return vkDao.selectPosts()
     }
 
@@ -21,21 +21,21 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
         return vkDao.countPosts()
     }
 
-    suspend fun deletePost(post: Post) {
+    suspend fun deletePost(post: PostEntity) {
         return vkDao.deletePost(post)
     }
 
     //groups
-    suspend fun insertGroup(group: Group) {
-        return vkDao.insertGroup(group)
+    suspend fun insertGroup(groupEntity: GroupEntity) {
+        return vkDao.insertGroup(groupEntity)
     }
 
-    suspend fun selectGroups(): List<Group> {
+    suspend fun selectGroups(): List<GroupEntity> {
         return vkDao.selectGroups()
     }
 
-    suspend fun updateGroup(group: Group) {
-        vkDao.updateGroup(group)
+    suspend fun updateGroup(groupEntity: GroupEntity) {
+        vkDao.updateGroup(groupEntity)
     }
 
     //comments

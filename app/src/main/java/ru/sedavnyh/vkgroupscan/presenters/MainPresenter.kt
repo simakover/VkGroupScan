@@ -1,34 +1,33 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
 import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moxy.MvpPresenter
 import ru.sedavnyh.vkgroupscan.data.Repository
-import ru.sedavnyh.vkgroupscan.models.entities.Group
+import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
+import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val mapper: FromResponseToEntityMapper
 ) : MvpPresenter<MainView>() {
     fun refreshComments() {
-        Log.d("inserting comment", "start")
         GlobalScope.launch(Dispatchers.Main) {
             val loadedCommentsBefore = repository.local.countComments()
             repository.local.deleteComments()
-            val posts = repository.local.selectPostsForComments()
+            val posts = repository.local.selectPosts()
 
             posts.map { post ->
-                var summaryComment = ""
+                var summaryComment : MutableList<String> = mutableListOf()
                 val loadedComments = repository.remote.wallGetComments(
                     post.ownerId.toString(),
                     post.id.toString()
@@ -37,9 +36,8 @@ class MainPresenter @Inject constructor(
                 loadedComments.response?.items?.map {
 
                     it.text = TextOperations().cleanComment(it.text)
-                    if (it.text != null) {
-                        Log.d("Add to summary", "${it.text}")
-                        summaryComment = summaryComment.trim() + System.lineSeparator() + it.text
+                    if (!it.text.isNullOrEmpty()) {
+                        summaryComment.add(it.text!!)
                     }
                     repository.local.insertComment(it)
                     it.respondThread?.items?.map { respComm ->
@@ -52,13 +50,13 @@ class MainPresenter @Inject constructor(
                             RespondThread(null)
                         )
                         respComm.text = TextOperations().cleanComment(respComm.text)
-                        if (respComm.text != null) {
-                            summaryComment = summaryComment.trim() + System.lineSeparator() + respComm.text
+                        if (!respComm.text.isNullOrEmpty()) {
+                            summaryComment.add(respComm.text!!)
                         }
                         repository.local.insertComment(comment)
                     }
                 }
-                post.totalComments = summaryComment.trim()
+                post.totalComments = summaryComment
                 repository.local.insertPost(post)
             }
             val loadedCommentsAfter = repository.local.countComments()
@@ -72,7 +70,7 @@ class MainPresenter @Inject constructor(
             val groups = repository.local.selectGroups()
             val loadedPostsBefore = repository.local.countPosts()
             groups.map { group ->
-                var response = repository.remote.wallGet(group.id.toString(), "1").response
+                var response = repository.remote.wallGet(group.id.toString(), "1")
                 Thread.sleep(500)
 
                 if (group.postCount < response?.count!!) {
@@ -89,13 +87,13 @@ class MainPresenter @Inject constructor(
                     group.postCount = response.count!!
 
                     response =
-                        repository.remote.wallGet(group.id.toString(), loadCount.toString()).response
+                        repository.remote.wallGet(group.id.toString(), loadCount.toString())
                     Thread.sleep(500)
 
                     response?.posts?.map { post ->
                         post.groupAvatar = group.avatar
                         post.groupName = group.title
-                        repository.local.insertPost(post)
+                        repository.local.insertPost(mapper.mapToPostEntity(post))
                     }
                     repository.local.updateGroup(group)
                 }
@@ -110,7 +108,7 @@ class MainPresenter @Inject constructor(
         GlobalScope.launch(Dispatchers.Main) {
             val groups = repository.local.selectGroups()
             if (groups.isNullOrEmpty()) {
-                var group = Group(
+                var group = GroupEntity(
                     -140579116,
                     0,
                     "скрины из кетайских пopномультеков 0.2",
@@ -118,7 +116,7 @@ class MainPresenter @Inject constructor(
                 )
                 repository.local.insertGroup(group)
 
-                group = Group(
+                group = GroupEntity(
                     -192370022,
                     0,
                     "a slice of doujin",
@@ -126,7 +124,7 @@ class MainPresenter @Inject constructor(
                 )
                 repository.local.insertGroup(group)
 
-                group = Group(
+                group = GroupEntity(
                     -184665352,
                     0,
                     "doujin cap",
@@ -137,7 +135,7 @@ class MainPresenter @Inject constructor(
         }
     }
 
-    fun deletePost(post: Post) {
+    fun deletePost(post: PostEntity) {
         GlobalScope.launch(Dispatchers.Main) {
             repository.local.deletePost(post)
             setData()
@@ -146,7 +144,7 @@ class MainPresenter @Inject constructor(
 
     fun setData() {
         GlobalScope.launch(Dispatchers.Main) {
-            val posts = repository.local.selectPostsForComments()
+            val posts = repository.local.selectPosts()
             viewState.setDataToRecycler(posts)
         }
     }

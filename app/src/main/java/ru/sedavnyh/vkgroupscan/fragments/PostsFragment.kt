@@ -5,32 +5,20 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
-import moxy.MvpFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
-import ru.sedavnyh.vkgroupscan.data.database.VkDao
-import ru.sedavnyh.vkgroupscan.data.network.Api
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
-import ru.sedavnyh.vkgroupscan.di.Scopes
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
-import ru.sedavnyh.vkgroupscan.models.entities.Group
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
-import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
-import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
 import ru.sedavnyh.vkgroupscan.presenters.MainPresenter
 import ru.sedavnyh.vkgroupscan.view.MainView
 import toothpick.Toothpick
-import java.lang.Exception
-import javax.inject.Inject
 
 class PostsFragment : MvpAppCompatFragment(), MainView {
 
@@ -91,7 +79,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
-    override fun setDataToRecycler(posts: List<Post>) {
+    override fun setDataToRecycler(posts: List<PostEntity>) {
         val lastItem = getCurrentItem(binding.postsRecyclerView)
         mAdapter.setData(posts)
         binding.postsRecyclerView.scrollToPosition(lastItem + 1)

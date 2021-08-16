@@ -6,9 +6,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import ru.sedavnyh.vkgroupscan.util.Constants.POSTS_TABLE
 
-@Entity(tableName = POSTS_TABLE)
 data class Post(
-    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
     val id: Int?,
     @SerializedName("attachments")
@@ -24,6 +22,5 @@ data class Post(
     @SerializedName("text")
     val text: String?,
     var groupAvatar: String?,
-    var groupName: String?,
-    var totalComments: String?
+    var groupName: String?
 )

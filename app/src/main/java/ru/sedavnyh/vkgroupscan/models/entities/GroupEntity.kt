@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import ru.sedavnyh.vkgroupscan.util.Constants.GROUPS_TABLE
 
 @Entity(tableName = GROUPS_TABLE)
-data class Group (
+data class GroupEntity (
     @PrimaryKey(autoGenerate = false)
     val id: Int,
     var postCount : Int,
