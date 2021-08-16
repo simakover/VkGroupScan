@@ -33,18 +33,15 @@
         app:layout_constraintStart_toEndOf="@+id/group_avatar"
         app:layout_constraintTop_toTopOf="@+id/group_avatar" />
 
-    <ImageView
-        android:id="@+id/image1"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/image_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/delete_post_button" />
+        app:layout_constraintTop_toBottomOf="@+id/delete_post_button"/>
+
 
     <TextView
         android:id="@+id/description_title"
@@ -55,9 +52,9 @@
         android:layout_marginEnd="8dp"
         android:text="Описание"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/image1"
-        app:layout_constraintStart_toStartOf="@+id/image1"
-        app:layout_constraintTop_toBottomOf="@+id/image1" />
+        app:layout_constraintEnd_toEndOf="@+id/image_recyclerView"
+        app:layout_constraintStart_toStartOf="@+id/image_recyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/image_recyclerView" />
 
     <ru.sedavnyh.vkgroupscan.util.CustomTextView
         android:id="@+id/description_text_view"

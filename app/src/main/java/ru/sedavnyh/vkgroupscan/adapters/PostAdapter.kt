@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import kotlinx.android.synthetic.main.post_row.view.*
@@ -23,6 +25,9 @@ class PostAdapter(
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val iAdapter by lazy { ImageAdapter() }
+
         fun bind(post: PostEntity) {
 
             itemView.title_text_view.text = post.groupName
@@ -52,7 +57,9 @@ class PostAdapter(
                 onDeleteClick.invoke(post)
             }
 
-            itemView.image1.load(post.images.first())
+            itemView.image_recyclerView.adapter = iAdapter
+            itemView.image_recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            iAdapter.setData(post.images)
         }
     }
 
