@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -82,10 +83,11 @@ class MainPresenter @Inject constructor(
             val groups = repository.local.selectGroups()
             val loadedPostsBefore = repository.local.countPosts()
             groups.map { group ->
-                var response = repository.remote.wallGet(group.id.toString(), "1")
+                var offset = 0
+                var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
                 Thread.sleep(500)
 
-                if (group.postCount < response?.count!!) {
+                while (group.postCount < response?.count!!) {
                     var loadCount : Int
                     loadCount = if (response.posts?.first()?.isPinned == 1) {
                         response.count!! - group.postCount + 1
@@ -93,13 +95,12 @@ class MainPresenter @Inject constructor(
                         response.count!! - group.postCount
                     }
 
-                    if (loadCount > POST_LOAD_COUNT)
+                    if (loadCount > POST_LOAD_COUNT) {
                         loadCount = POST_LOAD_COUNT
-
-                    group.postCount = response.count!!
+                    }
 
                     response =
-                        repository.remote.wallGet(group.id.toString(), loadCount.toString())
+                        repository.remote.wallGet(group.id.toString(), loadCount.toString(), offset.toString())
                     Thread.sleep(500)
 
                     response?.posts?.map { post ->
@@ -107,6 +108,9 @@ class MainPresenter @Inject constructor(
                         post.groupName = group.title
                         repository.local.insertPost(mapper.mapToPostEntity(post))
                     }
+
+                    group.postCount += loadCount
+                    offset += loadCount
                     repository.local.updateGroup(group)
                 }
             }
@@ -122,7 +126,7 @@ class MainPresenter @Inject constructor(
             if (groups.isNullOrEmpty()) {
                 var group = GroupEntity(
                     -140579116,
-                    0,
+                    15400, // 15963  = 563
                     "скрины из кетайских пopномультеков 0.2",
                     "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
                 )
@@ -130,7 +134,7 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -192370022,
-                    0,
+                    1500, // 2092 = 592
                     "a slice of doujin",
                     "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
                 )
@@ -138,7 +142,7 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -184665352,
-                    0,
+                    1000, // 1600 = 600
                     "doujin cap",
                     "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
                 )

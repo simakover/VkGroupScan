@@ -11,7 +11,8 @@ interface Api {
         @Query("access_token") accessToken: String,
         @Query("v") apiVersion: String,
         @Query("owner_id") ownerId: String,
-        @Query("count") count: String
+        @Query("count") count: String,
+        @Query("offset") offset: String
     ): WallGetResponse
 
     @GET("wall.getComments")

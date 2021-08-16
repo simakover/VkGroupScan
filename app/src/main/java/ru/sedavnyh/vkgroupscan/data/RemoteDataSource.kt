@@ -15,9 +15,10 @@ class RemoteDataSource @Inject constructor(
 ) {
     suspend fun wallGet(
         ownerId: String,
-        count: String
+        count: String,
+        offset: String
     ): Response? {
-        return vkApi.wallGet(ACCESS_TOKEN, API_VERSION, ownerId, count).response
+        return vkApi.wallGet(ACCESS_TOKEN, API_VERSION, ownerId, count, offset).response
     }
 
     suspend fun wallGetComments(
