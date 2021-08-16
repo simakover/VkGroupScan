@@ -67,7 +67,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        android:minHeight="48dp"
         android:text="TextView"
         android:textIsSelectable="true"
         android:textSize="16sp"
@@ -89,18 +88,13 @@
         app:layout_constraintStart_toStartOf="@+id/description_text_view"
         app:layout_constraintTop_toBottomOf="@+id/description_text_view" />
 
-    <ru.sedavnyh.vkgroupscan.util.CustomTextView
-        android:id="@+id/founded_links"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/founded_links_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:minHeight="48dp"
-        android:text="Not Found"
-        android:textIsSelectable="true"
-        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/links_title"
         app:layout_constraintStart_toStartOf="@+id/links_title"

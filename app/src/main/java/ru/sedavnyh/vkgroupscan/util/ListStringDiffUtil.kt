@@ -2,7 +2,7 @@ package ru.sedavnyh.vkgroupscan.util
 
 import androidx.recyclerview.widget.DiffUtil
 
-class LinksDiffUtil(
+class ListStringDiffUtil(
     private val oldList: List<String>,
     private val newList: List<String>
 ) : DiffUtil.Callback() {

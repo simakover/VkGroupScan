@@ -18,12 +18,14 @@ class PostAdapter(
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onTitleClick: (PostEntity) -> Unit,
     val onInnerImageClick: (String, Int) -> Unit,
+    val onInnerCommentClick: (String) -> Unit
 ) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val iAdapter by lazy { ImageAdapter(onImageClick = onInnerImageClick) }
+        private val cAdapter by lazy { CommentsAdapter(onCommentClick = onInnerCommentClick) }
 
         fun bind(post: PostEntity, position: Int) {
 
@@ -36,8 +38,8 @@ class PostAdapter(
             post.totalComments.map {
                 summaryComment = summaryComment.trim() + System.lineSeparator() + it
             }
-            itemView.founded_links.text = summaryComment
-            itemView.founded_links.fixTextSelection()
+//            itemView.founded_links.text = summaryComment
+//            itemView.founded_links.fixTextSelection()
 
             itemView.group_avatar.load(post.groupAvatar) {
                 transformations(CircleCropTransformation())
@@ -57,6 +59,10 @@ class PostAdapter(
             itemView.image_recyclerView.adapter = iAdapter
             itemView.image_recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             iAdapter.setData(post.images, position)
+
+            itemView.founded_links_recyclerView.adapter = cAdapter
+            itemView.founded_links_recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+            cAdapter.setData(post.totalComments)
         }
     }
 

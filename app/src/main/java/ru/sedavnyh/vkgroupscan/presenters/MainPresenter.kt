@@ -1,5 +1,8 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -171,6 +174,10 @@ class MainPresenter @Inject constructor(
     fun navigateToImage(link : String, position: Int) {
         lastItem = position
         router.navigateTo(Screens.imageScreen(link))
+    }
+
+    fun copyCommentToClipboard(comment: String) {
+        viewState.copyCommentToClipboard(comment)
     }
 
     fun exportPosts() {

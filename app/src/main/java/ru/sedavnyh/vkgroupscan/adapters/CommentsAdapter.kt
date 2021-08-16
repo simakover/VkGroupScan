@@ -1,33 +1,34 @@
 package ru.sedavnyh.vkgroupscan.adapters
 
+import android.content.ClipData
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import kotlinx.android.synthetic.main.image_row.view.*
+import kotlinx.android.synthetic.main.string_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.util.ListStringDiffUtil
 
-class ImageAdapter(
-    val onImageClick: (String, Int) -> Unit
-) : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
+
+class CommentsAdapter(
+    val onCommentClick: (String) -> Unit
+) : RecyclerView.Adapter<CommentsAdapter.MyViewHolder>() {
 
     var dataList : List<String> = emptyList()
-    var postPosition : Int = 0
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bind(link: String) {
-            itemView.pic_imageView.load(link)
-            itemView.pic_imageView.setOnClickListener {
-                onImageClick.invoke(link, postPosition)
+        fun bind(comment: String) {
+            itemView.textRow_textView.text = comment
+            itemView.textRow_textView.setOnClickListener {
+                onCommentClick.invoke(comment)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.image_row, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.string_row, parent, false)
         return MyViewHolder(view)
     }
 
@@ -39,12 +40,10 @@ class ImageAdapter(
         return dataList.size
     }
 
-    fun setData(links: List<String>, position: Int) {
-        val postDiffUtil = ListStringDiffUtil(dataList, links)
-        val postDiffResult = DiffUtil.calculateDiff(postDiffUtil)
+    fun setData(links: List<String>) {
+        val commentDiffUtil = ListStringDiffUtil(dataList, links)
+        val postDiffResult = DiffUtil.calculateDiff(commentDiffUtil)
         this.dataList = links
         postDiffResult.dispatchUpdatesTo(this)
-
-        postPosition = position
     }
 }

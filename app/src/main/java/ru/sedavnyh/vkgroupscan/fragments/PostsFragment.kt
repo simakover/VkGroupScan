@@ -1,5 +1,8 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -34,7 +37,12 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
 
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
-    private val mAdapter by lazy { PostAdapter(mainPresenter::deletePost, mainPresenter::goToPostPage, mainPresenter::navigateToImage) }
+    private val mAdapter by lazy { PostAdapter(
+        mainPresenter::deletePost,
+        mainPresenter::goToPostPage,
+        mainPresenter::navigateToImage,
+        mainPresenter::copyCommentToClipboard
+    ) }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -90,6 +98,13 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
 
     override fun getPosition() {
         mainPresenter.lastItem = getCurrentItem(binding.postsRecyclerView)
+    }
+
+    override fun copyCommentToClipboard(comment: String) {
+        val myClipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val myClip: ClipData = ClipData.newPlainText("Label", comment)
+        myClipboard.setPrimaryClip(myClip)
+        sendToast("$comment copied to clipboard")
     }
 
     private fun getCurrentItem(recyclerView: RecyclerView): Int {
