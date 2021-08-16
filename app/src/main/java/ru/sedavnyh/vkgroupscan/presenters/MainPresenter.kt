@@ -1,14 +1,20 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import moxy.MvpPresenter
+import ru.sedavnyh.vkgroupscan.R
+import ru.sedavnyh.vkgroupscan.activities.MainActivity
 import ru.sedavnyh.vkgroupscan.data.Repository
 import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
@@ -24,15 +30,19 @@ import javax.inject.Inject
 class MainPresenter @Inject constructor(
     private val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
-    private var router : Router
+    private var router : Router,
+    private var context: Context
 ) : MvpPresenter<MainView>() {
 
     var lastItem : Int = 0
     lateinit var notification: NotificationCompat.Builder
+    var notificationManager: NotificationManagerCompat
+    val channelId = "Progress Notification"
 
     init{
         checkGroupsExists()
         setData()
+        notificationManager = NotificationManagerCompat.from(context)
     }
 
     fun refreshComments() {
@@ -41,7 +51,7 @@ class MainPresenter @Inject constructor(
             repository.local.deleteComments()
             val posts = repository.local.selectPosts()
             var postCompleted = 0
-            viewState.createNotification("Загрузка комментариев")
+            createNotification("Загрузка комментариев")
 
             posts.map { post ->
                 var summaryComment : MutableList<String> = mutableListOf()
@@ -77,12 +87,12 @@ class MainPresenter @Inject constructor(
                 repository.local.insertPost(post)
 
                 postCompleted += 1
-                viewState.updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)
+                updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)
             }
             val loadedCommentsAfter = repository.local.countComments()
             setData()
-            viewState.updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
-            viewState.sendToast("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
+            updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
+            sendToast("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
         }
     }
 
@@ -91,7 +101,7 @@ class MainPresenter @Inject constructor(
             val groups = repository.local.selectGroups()
             val loadedPostsBefore = repository.local.countPosts()
             var groupsCompleted = 0
-            viewState.createNotification("Загрузка постов")
+            createNotification("Загрузка постов")
             groups.map { group ->
                 var offset = 0
                 var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
@@ -124,12 +134,12 @@ class MainPresenter @Inject constructor(
                     repository.local.updateGroup(group)
                 }
                 groupsCompleted += 1
-                viewState.updateNotification("Групп обработано: $groupsCompleted/${groups.size}", groupsCompleted, groups.size)
+                updateNotification("Групп обработано: $groupsCompleted/${groups.size}", groupsCompleted, groups.size)
             }
             val loadedPostsAfter = repository.local.countPosts()
             setData()
-            viewState.updateNotification("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
-            viewState.sendToast("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
+            updateNotification("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
+            sendToast("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
         }
     }
 
@@ -203,5 +213,47 @@ class MainPresenter @Inject constructor(
 
     fun importPosts() {
         TODO("Not yet implemented")
+    }
+
+    fun createNotification(title: String) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+        notification =
+            NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_update)
+                .setContentTitle(title)
+                .setContentText("Downloading")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(0, 0, true)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+        notificationManager.notify(1, notification.build())
+    }
+
+    fun updateNotification(message: String, progress: Int = 0, maxProgress: Int = 0) {
+
+        if (progress != 0) {
+            notification.setContentText(message)
+                .setProgress(maxProgress, progress, false)
+
+            notificationManager.notify(1, notification.build())
+        } else {
+            notification
+                .setContentText(message)
+                .setProgress(0, 0, false)
+                .setOngoing(false)
+            notificationManager.notify(1, notification.build())
+        }
+    }
+
+    fun sendToast(text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }

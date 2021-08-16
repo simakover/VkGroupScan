@@ -53,9 +53,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         )
     }
 
-    private lateinit var notificationManager: NotificationManagerCompat
-    val channelId = "Progress Notification"
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,8 +62,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         setHasOptionsMenu(true)
         binding.postsRecyclerView.adapter = mAdapter
         binding.postsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        notificationManager = NotificationManagerCompat.from(requireContext())
 
         return binding.root
     }
@@ -94,10 +89,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun sendToast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
-    }
-
     override fun setDataToRecycler(posts: List<PostEntity>) {
         mAdapter.setData(posts)
         binding.postsRecyclerView.scrollToPosition(mainPresenter.lastItem)
@@ -115,50 +106,11 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         val myClipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val myClip: ClipData = ClipData.newPlainText("Label", comment)
         myClipboard.setPrimaryClip(myClip)
-        sendToast("$comment copied to clipboard")
+        Toast.makeText(requireContext(), "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
     private fun getCurrentItem(recyclerView: RecyclerView): Int {
         return (recyclerView.layoutManager as LinearLayoutManager)
             .findFirstVisibleItemPosition()
-    }
-
-    override fun createNotification(title: String) {
-        val intent = Intent(requireContext(), MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, 0)
-
-        val notification =
-            NotificationCompat.Builder(requireContext(), channelId)
-                .setSmallIcon(R.drawable.ic_update)
-                .setContentTitle(title)
-                .setContentText("Downloading")
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setProgress(0, 0, true)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-        notificationManager.notify(1, notification.build())
-        mainPresenter.notification = notification
-    }
-
-    override fun updateNotification(message: String, progress: Int, maxProgress: Int) {
-
-        if (progress != 0) {
-            mainPresenter.notification.setContentText(message)
-                .setProgress(maxProgress, progress, false)
-
-            notificationManager.notify(1, mainPresenter.notification.build())
-        } else {
-            mainPresenter.notification
-                .setContentText(message)
-                .setProgress(0, 0, false)
-                .setOngoing(false)
-            notificationManager.notify(1, mainPresenter.notification.build())
-        }
     }
 }
