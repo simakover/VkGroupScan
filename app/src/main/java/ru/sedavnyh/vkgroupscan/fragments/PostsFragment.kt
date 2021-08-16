@@ -74,10 +74,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
                 mainPresenter.insertIntoDb()
             R.id.refresh_comments ->
                 mainPresenter.refreshComments()
-            R.id.export_posts ->
-                mainPresenter.exportPosts()
-            R.id.import_posts ->
-                mainPresenter.importPosts()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -85,10 +81,6 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
     override fun setDataToRecycler(posts: List<PostEntity>) {
         mAdapter.setData(posts)
         binding.postsRecyclerView.scrollToPosition(mainPresenter.lastItem)
-    }
-
-    override fun goToPostPage(intent: Intent, bundle: Bundle) {
-        ContextCompat.startActivity(requireContext(), intent, bundle)
     }
 
     override fun getPosition() {

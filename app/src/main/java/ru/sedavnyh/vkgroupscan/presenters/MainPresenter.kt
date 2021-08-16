@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -192,10 +193,14 @@ class MainPresenter @Inject constructor(
     fun goToPostPage(post: PostEntity) {
         val uris = Uri.parse("https://vk.com/wall${post.ownerId}_${post.id}")
         val intents = Intent(Intent.ACTION_VIEW, uris)
+        intents.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY
+                or Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET
+                or Intent.FLAG_ACTIVITY_NEW_TASK
+                or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         val bundle = Bundle()
         bundle.putBoolean("new_window", true)
         intents.putExtras(bundle)
-        viewState.goToPostPage(intents, bundle)
+        ContextCompat.startActivity(context, intents, bundle)
     }
 
     fun navigateToImage(link : String, position: Int) {

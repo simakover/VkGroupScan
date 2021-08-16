@@ -18,17 +18,4 @@
         android:title="refresh comments"
         app:showAsAction="ifRoom"
         tools:targetApi="o" />
-
-    <item
-        android:id="@+id/export_posts"
-        android:icon="@drawable/ic_pencil"
-        android:iconTint="@color/white"
-        android:title="Export Posts"/>
-
-    <item
-        android:id="@+id/import_posts"
-        android:icon="@drawable/ic_pencil"
-        android:iconTint="@color/white"
-        android:title="Import Posts"/>
-
 </menu>

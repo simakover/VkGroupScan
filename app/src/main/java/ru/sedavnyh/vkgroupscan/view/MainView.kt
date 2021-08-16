@@ -10,7 +10,6 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 @StateStrategyType(value = AddToEndSingleStrategy::class)
 interface MainView: MvpView {
     fun setDataToRecycler(posts: List<PostEntity>)
-    fun goToPostPage(intent : Intent, bundle: Bundle)
     fun getPosition()
     fun copyCommentToClipboard(comment: String)
 }
