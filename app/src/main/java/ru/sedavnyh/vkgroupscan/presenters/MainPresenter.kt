@@ -6,6 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -26,6 +30,7 @@ import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.navigation.Screens
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT
+import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT_GROUP
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
@@ -35,7 +40,8 @@ class MainPresenter @Inject constructor(
     private val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
     private var router : Router,
-    private var context: Context
+    private var context: Context,
+    private val spinner: Spinner
 ) : MvpPresenter<MainView>() {
 
     var lastItem : Int = 0
@@ -49,6 +55,44 @@ class MainPresenter @Inject constructor(
         checkGroupsExists()
         setData()
         notificationManager = NotificationManagerCompat.from(context)
+    }
+
+    fun populateSpinner() {
+        GlobalScope.launch ( Dispatchers.Main ) {
+            val groups : MutableList<GroupEntity> = mutableListOf()
+            groups.add(
+                GroupEntity(
+                0,
+                0,
+                "Все Группы",
+                ""
+            )
+            )
+            repository.local.selectGroups().map {
+                groups.add(it)
+            }
+            val spinnerAdapter: ArrayAdapter<GroupEntity> = ArrayAdapter<GroupEntity>(
+                context,
+                R.layout.custom_spinner_dropdown, groups
+            )
+            spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
+            spinner.adapter = spinnerAdapter
+            spinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    mSort.edit().putInt(APP_PREFERENCE_SORT_GROUP, groups[position].id).apply()
+                    setData()
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
+
+            groups.map {
+                if (it.id == groupId) {
+                    spinner.setSelection(spinnerAdapter.getPosition(it))
+                }
+            }
+        }
     }
 
     fun refreshComments() {
@@ -155,7 +199,7 @@ class MainPresenter @Inject constructor(
             if (groups.isNullOrEmpty()) {
                 var group = GroupEntity(
                     -140579116,
-                    15960, // 15963
+                    15500, // 15963
                     "скрины из кетайских пopномультеков 0.2",
                     "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
                 )
@@ -163,7 +207,7 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -192370022,
-                    2080, // 2092
+                    1500, // 2092
                     "a slice of doujin",
                     "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
                 )
@@ -171,12 +215,13 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -184665352,
-                    1590, // 1600
+                    1000, // 1600
                     "doujin cap",
                     "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
                 )
                 repository.local.insertGroup(group)
             }
+            populateSpinner()
         }
     }
 
@@ -191,10 +236,11 @@ class MainPresenter @Inject constructor(
     fun setData() {
         GlobalScope.launch(Dispatchers.Main) {
             val sortOrder = mSort.getString(APP_PREFERENCE_SORT,"DESC")
+            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
             val posts = if (sortOrder == "DESC") {
-                repository.local.selectPostsDesc()
+                repository.local.selectPostsDesc(groupId)
             } else {
-                repository.local.selectPostsAsc()
+                repository.local.selectPostsAsc(groupId)
             }
             viewState.setDataToRecycler(posts)
         }

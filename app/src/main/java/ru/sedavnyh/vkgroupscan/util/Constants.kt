@@ -11,6 +11,7 @@ object Constants {
 
     const val APP_PREFERENCES = "mySettings"
     const val APP_PREFERENCE_SORT = "sort"
+    const val APP_PREFERENCE_SORT_GROUP = "0"
 
 
     const val DATABASE_NAME = "vk_database"

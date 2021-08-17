@@ -18,7 +18,7 @@ class ImageFragment : Fragment() {
     private val binding get() = _binding!!
     private var linkImage: String = ""
     private lateinit var activity : AppCompatActivity
-    private var uiHided = false
+    private var uiHiden = false
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
@@ -27,16 +27,10 @@ class ImageFragment : Fragment() {
     ): View? {
         _binding = FragmentImageBinding.inflate(inflater, container, false)
         binding.fullImageImageView.load(linkImage)
-        binding.fullImageImageView.setOnClickListener {
-            if (uiHided) {
-                showSystemUI()
-            } else {
-                hideSystemUI()
-            }
-        }
 
         activity  = requireActivity() as AppCompatActivity
         activity.supportActionBar?.hide()
+        hideSystemUI()
         return binding.root
     }
 
@@ -53,11 +47,11 @@ class ImageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun hideSystemUI() {
-        uiHided = true
+        uiHiden = true
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
     private fun showSystemUI() {
-        uiHided = false
+        uiHiden = false
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 }

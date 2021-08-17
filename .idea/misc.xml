@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/drawable/ic_arrow_downward.xml" value="0.3828125" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/drawable/ic_arrow_upward.xml" value="0.3828125" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/drawable/ic_update.xml" value="0.3828125" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/custom_spinner_dropdown.xml" value="0.36666666666666664" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/custom_toolbar.xml" value="0.36666666666666664" />
         <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/fragment_image.xml" value="0.36666666666666664" />
+        <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/fragment_posts.xml" value="0.36666666666666664" />
         <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/image_row.xml" value="0.36666666666666664" />
         <entry key="..\:/Projects/VkGroupScan/app/src/main/res/layout/post_row.xml" value="0.36666666666666664" />
         <entry key="..\:/Projects/VkGroupScan/app/src/main/res/menu/posts_menu.xml" value="0.36666666666666664" />

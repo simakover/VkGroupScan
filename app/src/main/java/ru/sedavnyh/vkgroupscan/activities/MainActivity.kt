@@ -1,6 +1,8 @@
 package ru.sedavnyh.vkgroupscan.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.terrakok.cicerone.Navigator
@@ -29,10 +31,15 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(findViewById(R.id.custom_toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false);
+
+        val navSpinner: Spinner = findViewById(R.id.spinner_nav)
+
         Toothpick
             .openScope(APP_SCOPE)
             .installModules(
-                contextModule(context = this)
+                contextModule(context = this, spinner = navSpinner)
             )
 
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))

@@ -12,12 +12,12 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
     suspend fun insertPost(post: PostEntity) {
         return vkDao.insertPost(post)
     }
-    suspend fun selectPostsDesc(): List<PostEntity> {
-        return vkDao.selectPostsDesc()
+    suspend fun selectPostsDesc(groupId : Int = 0): List<PostEntity> {
+        return vkDao.selectPostsDesc(groupId)
     }
 
-    suspend fun selectPostsAsc(): List<PostEntity> {
-        return vkDao.selectPostsAsc()
+    suspend fun selectPostsAsc(groupId: Int = 0): List<PostEntity> {
+        return vkDao.selectPostsAsc(groupId)
     }
 
     suspend fun countPosts(): Int {

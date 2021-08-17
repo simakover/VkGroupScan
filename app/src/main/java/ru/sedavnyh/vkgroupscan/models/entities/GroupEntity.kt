@@ -11,4 +11,8 @@ data class GroupEntity (
     var postCount : Int,
     var title: String,
     var avatar: String
-)
+) {
+    override fun toString(): String {
+        return title
+    }
+}
