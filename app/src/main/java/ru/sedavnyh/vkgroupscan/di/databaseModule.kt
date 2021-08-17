@@ -19,5 +19,4 @@ fun databaseModule(context: Context) = module {
     val dao = db.vkDao()
 
     bind(VkDao::class.java).toInstance(dao)
-    bind(Context::class.java).toInstance(context)
 }
