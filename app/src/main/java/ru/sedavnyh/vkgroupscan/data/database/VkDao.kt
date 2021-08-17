@@ -12,7 +12,10 @@ interface VkDao {
     suspend fun insertPost(postEntity: PostEntity)
 
     @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 ORDER BY DATE DESC")
-    suspend fun selectPosts() : List<PostEntity>
+    suspend fun selectPostsDesc() : List<PostEntity>
+
+    @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 ORDER BY DATE ASC")
+    suspend fun selectPostsAsc() : List<PostEntity>
 
     @Query("SELECT COUNT(1) FROM POSTS_TABLE")
     suspend fun countPosts(): Int

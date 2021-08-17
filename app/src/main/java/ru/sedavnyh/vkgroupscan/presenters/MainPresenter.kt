@@ -3,6 +3,7 @@ package ru.sedavnyh.vkgroupscan.presenters
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -23,6 +24,8 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.navigation.Screens
+import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
+import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT
 import ru.sedavnyh.vkgroupscan.util.Constants.POST_LOAD_COUNT
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.view.MainView
@@ -39,8 +42,10 @@ class MainPresenter @Inject constructor(
     lateinit var notification: NotificationCompat.Builder
     var notificationManager: NotificationManagerCompat
     val channelId = "Progress Notification"
+    var mSort : SharedPreferences
 
     init{
+        mSort = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         checkGroupsExists()
         setData()
         notificationManager = NotificationManagerCompat.from(context)
@@ -50,7 +55,7 @@ class MainPresenter @Inject constructor(
         GlobalScope.launch(Dispatchers.Main) {
             val loadedCommentsBefore = repository.local.countComments()
             repository.local.deleteComments()
-            val posts = repository.local.selectPosts()
+            val posts = repository.local.selectPostsDesc()
             var postCompleted = 0
             createNotification("Загрузка комментариев")
 
@@ -185,7 +190,12 @@ class MainPresenter @Inject constructor(
 
     fun setData() {
         GlobalScope.launch(Dispatchers.Main) {
-            val posts = repository.local.selectPosts()
+            val sortOrder = mSort.getString(APP_PREFERENCE_SORT,"DESC")
+            val posts = if (sortOrder == "DESC") {
+                repository.local.selectPostsDesc()
+            } else {
+                repository.local.selectPostsAsc()
+            }
             viewState.setDataToRecycler(posts)
         }
     }
@@ -248,5 +258,9 @@ class MainPresenter @Inject constructor(
 
     fun sendToast(text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
+
+    fun setSortOrder(sortOrder : String) {
+        mSort.edit().putString(APP_PREFERENCE_SORT, sortOrder).apply()
     }
 }

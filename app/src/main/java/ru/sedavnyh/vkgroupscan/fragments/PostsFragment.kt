@@ -74,6 +74,14 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
                 mainPresenter.insertIntoDb()
             R.id.refresh_comments ->
                 mainPresenter.refreshComments()
+            R.id.menu_date_desc -> {
+                mainPresenter.setSortOrder("DESC")
+                mainPresenter.setData()
+            }
+            R.id.menu_date_asc -> {
+                mainPresenter.setSortOrder("ASC")
+                mainPresenter.setData()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

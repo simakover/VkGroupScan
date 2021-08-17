@@ -4,7 +4,6 @@ import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
@@ -13,8 +12,12 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
     suspend fun insertPost(post: PostEntity) {
         return vkDao.insertPost(post)
     }
-    suspend fun selectPosts(): List<PostEntity> {
-        return vkDao.selectPosts()
+    suspend fun selectPostsDesc(): List<PostEntity> {
+        return vkDao.selectPostsDesc()
+    }
+
+    suspend fun selectPostsAsc(): List<PostEntity> {
+        return vkDao.selectPostsAsc()
     }
 
     suspend fun countPosts(): Int {

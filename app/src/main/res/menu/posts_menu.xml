@@ -7,7 +7,7 @@
         android:id="@+id/refresh_groups"
         android:icon="@drawable/ic_update"
         android:iconTint="@color/white"
-        android:title="refresh groups"
+        android:title="Refresh groups"
         app:showAsAction="ifRoom"
         tools:targetApi="o" />
 
@@ -15,7 +15,30 @@
         android:id="@+id/refresh_comments"
         android:icon="@drawable/ic_pencil"
         android:iconTint="@color/white"
-        android:title="refresh comments"
+        android:title="Refresh comments"
         app:showAsAction="ifRoom"
         tools:targetApi="o" />
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/sort_by"
+            android:title="Sort"
+            app:showAsAction="ifRoom"
+            android:icon="@drawable/ic_sort"
+            android:iconTint="@color/white">
+            <menu>
+                <item
+                    android:id="@+id/menu_date_desc"
+                    android:icon="@drawable/ic_arrow_upward"
+                    android:iconTint="@color/purple_500"
+                    android:title="Сначала новые"/>
+                <item
+                    android:id="@+id/menu_date_asc"
+                    android:icon="@drawable/ic_arrow_downward"
+                    android:iconTint="@color/purple_500"
+                    android:title="Сначала старые"/>
+            </menu>
+        </item>
+    </group>
+
 </menu>

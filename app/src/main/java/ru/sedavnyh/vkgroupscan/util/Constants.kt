@@ -9,6 +9,9 @@ object Constants {
     const val DATABASE_VERSION = 1
     const val THREAD_ITEMS_COUNT = "10"
 
+    const val APP_PREFERENCES = "mySettings"
+    const val APP_PREFERENCE_SORT = "sort"
+
 
     const val DATABASE_NAME = "vk_database"
     const val POSTS_TABLE = "posts_table"
