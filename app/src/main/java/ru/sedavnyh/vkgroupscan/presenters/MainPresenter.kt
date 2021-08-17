@@ -150,7 +150,7 @@ class MainPresenter @Inject constructor(
             if (groups.isNullOrEmpty()) {
                 var group = GroupEntity(
                     -140579116,
-                    15400, // 15963
+                    15960, // 15963
                     "скрины из кетайских пopномультеков 0.2",
                     "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
                 )
@@ -158,7 +158,7 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -192370022,
-                    1500, // 2092
+                    2080, // 2092
                     "a slice of doujin",
                     "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
                 )
@@ -166,7 +166,7 @@ class MainPresenter @Inject constructor(
 
                 group = GroupEntity(
                     -184665352,
-                    1000, // 1600
+                    1590, // 1600
                     "doujin cap",
                     "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
                 )

@@ -83,19 +83,10 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         binding.postsRecyclerView.scrollToPosition(mainPresenter.lastItem)
     }
 
-    override fun getPosition() {
-        mainPresenter.lastItem = getCurrentItem(binding.postsRecyclerView)
-    }
-
     override fun copyCommentToClipboard(comment: String) {
         val myClipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val myClip: ClipData = ClipData.newPlainText("Label", comment)
         myClipboard.setPrimaryClip(myClip)
         Toast.makeText(requireContext(), "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun getCurrentItem(recyclerView: RecyclerView): Int {
-        return (recyclerView.layoutManager as LinearLayoutManager)
-            .findFirstVisibleItemPosition()
     }
 }
