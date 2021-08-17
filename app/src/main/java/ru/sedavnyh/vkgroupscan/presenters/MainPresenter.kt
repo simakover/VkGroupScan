@@ -73,7 +73,7 @@ class MainPresenter @Inject constructor(
             }
             val spinnerAdapter: ArrayAdapter<GroupEntity> = ArrayAdapter<GroupEntity>(
                 context,
-                R.layout.custom_spinner_dropdown, groups
+                R.layout.custom_spinner, groups
             )
             spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
             spinner.adapter = spinnerAdapter

@@ -21,6 +21,7 @@
         <Spinner
             android:id="@+id/spinner_nav"
             android:layout_width="wrap_content"
+            android:dropDownWidth="330dp"
             android:layout_height="wrap_content" />
 
     </androidx.appcompat.widget.Toolbar>
