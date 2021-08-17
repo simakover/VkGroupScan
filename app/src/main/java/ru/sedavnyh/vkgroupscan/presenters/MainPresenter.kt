@@ -97,9 +97,10 @@ class MainPresenter @Inject constructor(
 
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
-            val loadedCommentsBefore = repository.local.countComments()
-            repository.local.deleteComments()
-            val posts = repository.local.selectPostsDesc()
+            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
+            val loadedCommentsBefore = repository.local.countComments(groupId)
+            repository.local.deleteComments(groupId)
+            val posts = repository.local.selectPostsDesc(groupId)
             var postCompleted = 0
             createNotification("Загрузка комментариев")
 
@@ -139,7 +140,7 @@ class MainPresenter @Inject constructor(
                 postCompleted += 1
                 updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)
             }
-            val loadedCommentsAfter = repository.local.countComments()
+            val loadedCommentsAfter = repository.local.countComments(groupId)
             setData()
             updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
             sendToast("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")

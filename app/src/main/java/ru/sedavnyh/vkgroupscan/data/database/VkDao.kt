@@ -37,9 +37,9 @@ interface VkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertComment(comment: Comment)
 
-    @Query("DELETE FROM COMMENTS_TABLE")
-    suspend fun deleteComments()
+    @Query("DELETE FROM COMMENTS_TABLE WHERE ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId))")
+    suspend fun deleteComments(groupId: Int)
 
-    @Query("SELECT COUNT(1) FROM COMMENTS_TABLE")
-    suspend fun countComments(): Int
+    @Query("SELECT COUNT(1) FROM COMMENTS_TABLE WHERE ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ")
+    suspend fun countComments(groupId: Int): Int
 }

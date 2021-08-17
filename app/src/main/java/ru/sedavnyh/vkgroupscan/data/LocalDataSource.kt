@@ -46,11 +46,11 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
         vkDao.insertComment(comment)
     }
 
-    suspend fun deleteComments() {
-        vkDao.deleteComments()
+    suspend fun deleteComments(groupId: Int = 0) {
+        vkDao.deleteComments(groupId)
     }
 
-    suspend fun countComments(): Int {
-        return vkDao.countComments()
+    suspend fun countComments(groupId: Int = 0): Int {
+        return vkDao.countComments(groupId)
     }
 }
