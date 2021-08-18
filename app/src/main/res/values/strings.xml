@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">VkGroupScan</string>
+    <string-array name="spinnerTitle">
+        <item>Все Группы</item>
+        <item>a slice of doujin</item>
+        <item>doujin cap</item>
+        <item>скрины из кетайских пopномультеков</item>
+    </string-array>
 </resources>

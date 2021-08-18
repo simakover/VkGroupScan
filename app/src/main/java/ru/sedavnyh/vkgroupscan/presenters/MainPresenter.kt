@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
@@ -39,65 +38,47 @@ import javax.inject.Inject
 class MainPresenter @Inject constructor(
     private val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
-    private var router : Router,
+    private var router: Router,
     private var context: Context,
     private val spinner: Spinner
 ) : MvpPresenter<MainView>() {
 
-    var lastItem : Int = 0
+    var lastItem: Int = 0
     lateinit var notification: NotificationCompat.Builder
     var notificationManager: NotificationManagerCompat
     val channelId = "Progress Notification"
-    var mSort : SharedPreferences
+    var mSort: SharedPreferences
 
-    init{
+    init {
         mSort = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         checkGroupsExists()
         setData()
         notificationManager = NotificationManagerCompat.from(context)
+        populateSpinner()
     }
 
     fun populateSpinner() {
-        GlobalScope.launch ( Dispatchers.Main ) {
-            val groups : MutableList<GroupEntity> = mutableListOf()
-            groups.add(
-                GroupEntity(
-                0,
-                0,
-                "Все Группы",
-                ""
-            )
-            )
-            repository.local.selectGroups().map {
-                groups.add(it)
+        val spinnerArray : Array<Int> = arrayOf(0, -192370022, -184665352, -140579116)
+        spinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mSort.edit().putInt(APP_PREFERENCE_SORT_GROUP, spinnerArray[position]).apply()
+                setData()
             }
-            val spinnerAdapter: ArrayAdapter<GroupEntity> = ArrayAdapter<GroupEntity>(
-                context,
-                R.layout.custom_spinner, groups
-            )
-            spinnerAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown);
-            spinner.adapter = spinnerAdapter
-            spinner.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    mSort.edit().putInt(APP_PREFERENCE_SORT_GROUP, groups[position].id).apply()
-                    setData()
-                }
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-            }
-            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP, 0)
 
-            groups.map {
-                if (it.id == groupId) {
-                    spinner.setSelection(spinnerAdapter.getPosition(it))
-                }
+        spinnerArray.forEachIndexed { index, i ->
+            if (i == groupId) {
+                spinner.setSelection(index)
             }
         }
     }
 
     fun refreshComments() {
         GlobalScope.launch(Dispatchers.Main) {
-            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
+            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP, 0)
             val loadedCommentsBefore = repository.local.countComments(groupId)
             repository.local.deleteComments(groupId)
             val posts = repository.local.selectPostsDesc(groupId)
@@ -105,7 +86,7 @@ class MainPresenter @Inject constructor(
             createNotification("Загрузка комментариев")
 
             posts.map { post ->
-                var summaryComment : MutableList<String> = mutableListOf()
+                var summaryComment: MutableList<String> = mutableListOf()
                 val loadedComments = repository.remote.wallGetComments(
                     post.ownerId.toString(),
                     post.id.toString()
@@ -159,7 +140,7 @@ class MainPresenter @Inject constructor(
                 Thread.sleep(500)
 
                 while (group.postCount < response?.count!!) {
-                    var loadCount : Int
+                    var loadCount: Int
                     loadCount = if (response.posts?.first()?.isPinned == 1) {
                         response.count!! - group.postCount + 1
                     } else {
@@ -222,7 +203,6 @@ class MainPresenter @Inject constructor(
                 )
                 repository.local.insertGroup(group)
             }
-            populateSpinner()
         }
     }
 
@@ -236,8 +216,8 @@ class MainPresenter @Inject constructor(
 
     fun setData() {
         GlobalScope.launch(Dispatchers.Main) {
-            val sortOrder = mSort.getString(APP_PREFERENCE_SORT,"DESC")
-            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP,0)
+            val sortOrder = mSort.getString(APP_PREFERENCE_SORT, "DESC")
+            val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP, 0)
             val posts = if (sortOrder == "DESC") {
                 repository.local.selectPostsDesc(groupId)
             } else {
@@ -256,7 +236,7 @@ class MainPresenter @Inject constructor(
         ContextCompat.startActivity(context, intents, bundle)
     }
 
-    fun navigateToImage(link : String, position: Int) {
+    fun navigateToImage(link: String, position: Int) {
         lastItem = position
         router.navigateTo(Screens.imageScreen(link))
     }
@@ -307,7 +287,7 @@ class MainPresenter @Inject constructor(
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
-    fun setSortOrder(sortOrder : String) {
+    fun setSortOrder(sortOrder: String) {
         mSort.edit().putString(APP_PREFERENCE_SORT, sortOrder).apply()
     }
 }
