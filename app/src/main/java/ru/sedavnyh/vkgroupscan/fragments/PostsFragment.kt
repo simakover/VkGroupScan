@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -82,6 +84,18 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
+        val activity  = requireActivity() as AppCompatActivity
+
+        binding.postsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    activity.supportActionBar?.hide()
+                } else {
+                    activity.supportActionBar?.show()
+                }
+            }
+        })
 
         return binding.root
     }
