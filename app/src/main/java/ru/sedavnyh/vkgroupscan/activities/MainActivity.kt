@@ -1,8 +1,8 @@
 package ru.sedavnyh.vkgroupscan.activities
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.Spinner
+import android.view.View
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.terrakok.cicerone.Navigator
@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_main)
+
+        supportActionBar?.elevation = 0F
 
         Toothpick
             .openScope(APP_SCOPE)

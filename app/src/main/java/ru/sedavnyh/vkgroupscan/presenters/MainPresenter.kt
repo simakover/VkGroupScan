@@ -6,14 +6,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.Router
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,6 +25,7 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.navigation.Screens
+import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT_GROUP
@@ -36,7 +35,7 @@ import ru.sedavnyh.vkgroupscan.view.MainView
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-    private val repository: Repository,
+    val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
     private var router: Router,
     private var context: Context
@@ -49,10 +48,29 @@ class MainPresenter @Inject constructor(
     var mSort: SharedPreferences
 
     init {
-        mSort = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        mSort = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
         checkGroupsExists()
         setData()
         notificationManager = NotificationManagerCompat.from(context)
+        setupVpRecyclers()
+    }
+
+    fun setupVpRecyclers() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val groups : MutableList<GroupEntity> = mutableListOf()
+            groups.add(
+                GroupEntity(
+                    0,
+                    0,
+                    "all",
+                    ""
+                )
+            )
+            repository.local.selectGroups().map {
+                groups.add(it)
+            }
+            viewState.setDataToViewPager(groups)
+        }
     }
 
     fun refreshComments() {

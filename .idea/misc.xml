@@ -11,9 +11,12 @@
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/activity_main.xml" value="0.22083333333333333" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/custom_spinner.xml" value="0.38385416666666666" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/custom_spinner_dropdown.xml" value="0.38385416666666666" />
+        <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/drop_down_item.xml" value="0.38385416666666666" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/fragment_image.xml" value="0.22083333333333333" />
-        <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/fragment_posts.xml" value="0.38385416666666666" />
+        <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/fragment_page.xml" value="0.38385416666666666" />
+        <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/fragment_posts.xml" value="0.25" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/image_row.xml" value="0.38385416666666666" />
+        <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/item_view_pager.xml" value="0.38385416666666666" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/post_row.xml" value="0.5" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/layout/string_row.xml" value="0.38385416666666666" />
         <entry key="..\:/projects/Android/VkGroupScan/app/src/main/res/menu-v26/posts_menu.xml" value="0.2125" />
