@@ -28,18 +28,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_main)
-
-        setSupportActionBar(findViewById(R.id.custom_toolbar))
-        supportActionBar?.setDisplayShowTitleEnabled(false);
-
-        val navSpinner: Spinner = findViewById(R.id.spinner_nav)
 
         Toothpick
             .openScope(APP_SCOPE)
             .installModules(
-                contextModule(context = this, spinner = navSpinner)
+                contextModule(this)
             )
 
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))

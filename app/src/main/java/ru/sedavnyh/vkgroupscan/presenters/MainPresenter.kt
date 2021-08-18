@@ -39,8 +39,7 @@ class MainPresenter @Inject constructor(
     private val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
     private var router: Router,
-    private var context: Context,
-    private val spinner: Spinner
+    private var context: Context
 ) : MvpPresenter<MainView>() {
 
     var lastItem: Int = 0
@@ -54,26 +53,6 @@ class MainPresenter @Inject constructor(
         checkGroupsExists()
         setData()
         notificationManager = NotificationManagerCompat.from(context)
-        populateSpinner()
-    }
-
-    fun populateSpinner() {
-        val spinnerArray : Array<Int> = arrayOf(0, -192370022, -184665352, -140579116)
-        spinner.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mSort.edit().putInt(APP_PREFERENCE_SORT_GROUP, spinnerArray[position]).apply()
-                setData()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-        val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP, 0)
-
-        spinnerArray.forEachIndexed { index, i ->
-            if (i == groupId) {
-                spinner.setSelection(index)
-            }
-        }
     }
 
     fun refreshComments() {
