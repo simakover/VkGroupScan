@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -16,17 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_posts.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
 import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
-import ru.sedavnyh.vkgroupscan.data.Repository
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
@@ -36,7 +30,6 @@ import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
 import ru.sedavnyh.vkgroupscan.view.MainView
 import toothpick.Toothpick
-import javax.inject.Inject
 
 class PostsFragment : MvpAppCompatFragment(), MainView {
 
@@ -89,9 +82,9 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         binding.postsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
+                if (dy > 30) {
                     activity.supportActionBar?.hide()
-                } else {
+                } else if (dy < -30) {
                     activity.supportActionBar?.show()
                 }
             }
