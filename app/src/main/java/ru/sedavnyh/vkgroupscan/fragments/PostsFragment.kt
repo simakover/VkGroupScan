@@ -52,6 +52,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
     }
     private val vpAdapter by lazy { ViewPagerAdapter() }
     lateinit var mSort: SharedPreferences
+    lateinit var tabLayout : TabLayout
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -66,7 +67,9 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         binding.vp2.adapter = vpAdapter
         mSort = requireContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
 
-        binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+        tabLayout = activity?.findViewById(R.id.tabLayout)!!
+
+        tabLayout?.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 mSort.edit().putInt(Constants.APP_PREFERENCE_SORT_GROUP, tab.id).apply()
                 mainPresenter.setData()
@@ -75,29 +78,12 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        val activity  = requireActivity() as AppCompatActivity
-
-        binding.postsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 50) {
-                    activity.supportActionBar?.hide()
-                } else if (dy < -50) {
-                    activity.supportActionBar?.show()
-                }
-            }
-        })
-
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.posts_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -125,7 +111,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
 
     override fun setDataToViewPager(groups: MutableList<GroupEntity>) {
         vpAdapter.setData(groups)
-        TabLayoutMediator(binding.tabLayout, binding.vp2) { tab, position ->
+        TabLayoutMediator(tabLayout, binding.vp2) { tab, position ->
             tab.text = groups[position].title
             tab.id = groups[position].id
         }.attach()

@@ -141,17 +141,17 @@ class MainPresenter @Inject constructor(
                 var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
                 Thread.sleep(500)
 
-                while (group.postCount < response?.count!!) {  // 1
+                while (group.postCount < response?.count!!) {
                     var loadCount: Int
                     loadCount = if (response.posts?.first()?.isPinned == 1) {
-                        response.count!! - group.postCount + 1  //2
+                        response.count!! - group.postCount + 1
                     } else {
                         response.count!! - group.postCount
                     }
 
                     var notloaded = 0
-                    if (loadCount > POST_LOAD_COUNT) { //огр 5
-                        notloaded = loadCount - POST_LOAD_COUNT // 2
+                    if (loadCount > POST_LOAD_COUNT) {
+                        notloaded = loadCount - POST_LOAD_COUNT
                         loadCount = POST_LOAD_COUNT
                     }
 

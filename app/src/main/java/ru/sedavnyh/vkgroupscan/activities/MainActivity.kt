@@ -1,8 +1,7 @@
 package ru.sedavnyh.vkgroupscan.activities
 
 import android.os.Bundle
-import android.view.View
-import android.view.Window
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.terrakok.cicerone.Navigator
@@ -30,8 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_main)
-
-        supportActionBar?.elevation = 0F
+        setSupportActionBar(findViewById(R.id.customToolbar))
 
         Toothpick
             .openScope(APP_SCOPE)
@@ -42,5 +40,10 @@ class MainActivity : AppCompatActivity() {
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))
         navigatorHolder.setNavigator(navigator)
         router.newRootScreen(Screens.postsScreen())
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.posts_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 }
