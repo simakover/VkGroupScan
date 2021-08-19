@@ -141,15 +141,17 @@ class MainPresenter @Inject constructor(
                 var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
                 Thread.sleep(500)
 
-                while (group.postCount < response?.count!!) {
+                while (group.postCount < response?.count!!) {  // 1
                     var loadCount: Int
                     loadCount = if (response.posts?.first()?.isPinned == 1) {
-                        response.count!! - group.postCount + 1
+                        response.count!! - group.postCount + 1  //2
                     } else {
                         response.count!! - group.postCount
                     }
 
-                    if (loadCount > POST_LOAD_COUNT) {
+                    var notloaded = 0
+                    if (loadCount > POST_LOAD_COUNT) { //огр 5
+                        notloaded = loadCount - POST_LOAD_COUNT // 2
                         loadCount = POST_LOAD_COUNT
                     }
 
@@ -163,7 +165,12 @@ class MainPresenter @Inject constructor(
                         repository.local.insertPost(mapper.mapToPostEntity(post))
                     }
 
-                    group.postCount += loadCount
+                    if (response?.posts?.first()?.isPinned == 1 && notloaded == 0) {
+                        group.postCount += loadCount - 1
+                    } else {
+                        group.postCount += loadCount
+                    }
+
                     offset += loadCount
                     repository.local.updateGroup(group)
                 }
