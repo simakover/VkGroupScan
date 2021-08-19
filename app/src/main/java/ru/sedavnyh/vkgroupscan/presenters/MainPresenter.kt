@@ -168,6 +168,11 @@ class MainPresenter @Inject constructor(
         }
     }
 
+    fun insertPost(post: PostEntity) {
+        GlobalScope.launch { repository.local.insertPost(post) }
+        setData()
+    }
+
     fun checkGroupsExists() {
         GlobalScope.launch(Dispatchers.Main) {
             val groups = repository.local.selectGroups()

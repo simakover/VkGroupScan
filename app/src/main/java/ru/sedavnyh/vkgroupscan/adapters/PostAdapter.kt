@@ -8,17 +8,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.post_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
-import kotlin.reflect.KFunction1
 
 class PostAdapter(
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onTitleClick: (PostEntity) -> Unit,
     val onInnerImageClick: (String, Int) -> Unit,
-    val onInnerCommentClick: (String) -> Unit
+    val onInnerCommentClick: (String) -> Unit,
+    val onSnackBarUndo: (PostEntity) -> Unit
 ) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
@@ -47,6 +48,14 @@ class PostAdapter(
 
             itemView.delete_post_button.setOnClickListener {
                 onDeleteClick.invoke(post, position)
+
+                val snackBar = Snackbar.make(
+                    itemView, "Удален пост '${post.id}'", Snackbar.LENGTH_LONG
+                )
+                snackBar.setAction("Восстановить") {
+                    onSnackBarUndo.invoke(post)
+                }
+                snackBar.show()
             }
 
             itemView.image_recyclerView.adapter = iAdapter

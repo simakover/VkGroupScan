@@ -46,7 +46,8 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             mainPresenter::deletePost,
             mainPresenter::goToPostPage,
             mainPresenter::navigateToImage,
-            mainPresenter::copyCommentToClipboard
+            mainPresenter::copyCommentToClipboard,
+            mainPresenter::insertPost
         )
     }
     private val vpAdapter by lazy { ViewPagerAdapter() }

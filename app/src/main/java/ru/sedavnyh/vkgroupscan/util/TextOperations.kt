@@ -20,6 +20,7 @@ class TextOperations {
             // Strip splitters and consecutive spaces
             val consecutiveSpacesRegex = Regex(" +")
             cleanedComment = cleanedComment.trim().replace(" - ", " ").replace(consecutiveSpacesRegex, " ").trim()
+            cleanedComment = cleanedComment.replace("-", " ").trim()
 
             return cleanedComment
         }
