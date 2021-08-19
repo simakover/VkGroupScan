@@ -92,6 +92,7 @@ class MainPresenter @Inject constructor(
                         summaryComment.add(it.text!!)
                     }
                     repository.local.insertComment(it)
+
                     it.respondThread?.items?.map { respComm ->
                         val comment = Comment(
                             respComm.id,
@@ -108,6 +109,14 @@ class MainPresenter @Inject constructor(
                         repository.local.insertComment(comment)
                     }
                 }
+
+                val cleanDescription = TextOperations().cleanDescription(post.text)
+                if (!cleanDescription.isNullOrEmpty()) {
+                    cleanDescription.map {
+                        summaryComment.add(it)
+                    }
+                }
+
                 post.totalComments = summaryComment
                 repository.local.insertPost(post)
 

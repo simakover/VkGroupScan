@@ -5,6 +5,8 @@ import java.util.*
 
 class TextOperations {
 
+    val titleRegex = Regex("[^a-zA-Z0-9- ]")
+
     fun cleanComment(comment: String?): String? {
         if (comment != null) {
 
@@ -14,7 +16,6 @@ class TextOperations {
             var cleanedComment = removeTextInBrackets(preComment)
 
             // Strip non-special characters
-            val titleRegex = Regex("[^a-zA-Z0-9- ]")
             cleanedComment = cleanedComment.replace(titleRegex, " ")
 
             // Strip splitters and consecutive spaces
@@ -25,6 +26,29 @@ class TextOperations {
             return cleanedComment
         }
         return null
+    }
+
+    fun cleanDescription(description: String) : MutableList<String> {
+
+        var result : MutableList<String> = mutableListOf()
+
+        var cleanedDescr = description.lowercase(Locale.getDefault())
+        cleanedDescr = removeTextInBrackets(cleanedDescr)
+        cleanedDescr = cleanedDescr.replace(titleRegex, " ")
+
+        val regexDecimals = Regex("(\\d{6})")
+        var matches = regexDecimals.findAll(cleanedDescr)
+
+        val decimals = matches.map {
+            it.groupValues[1] }.joinToString("")
+        result.add(decimals)
+
+        val regexStr = Regex("([^a-zA-Z ])")
+        val letters = cleanedDescr.replace(regexStr, " ").trim()
+
+        result.add(letters)
+
+        return result
     }
 
     private fun removeTextInBrackets(text: String): String {
