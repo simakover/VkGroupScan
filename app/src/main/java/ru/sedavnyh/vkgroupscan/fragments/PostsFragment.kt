@@ -1,13 +1,10 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,9 +79,9 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
         binding.postsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 30) {
+                if (dy > 50) {
                     activity.supportActionBar?.hide()
-                } else if (dy < -30) {
+                } else if (dy < -50) {
                     activity.supportActionBar?.show()
                 }
             }
@@ -131,12 +128,5 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             tab.text = groups[position].title
             tab.id = groups[position].id
         }.attach()
-    }
-
-    override fun copyCommentToClipboard(comment: String) {
-        val myClipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val myClip: ClipData = ClipData.newPlainText("Label", comment)
-        myClipboard.setPrimaryClip(myClip)
-        Toast.makeText(requireContext(), "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 }

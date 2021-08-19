@@ -1,9 +1,7 @@
 package ru.sedavnyh.vkgroupscan.presenters
 
 import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -11,7 +9,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.github.terrakok.cicerone.Router
-import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -25,7 +22,6 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.navigation.Screens
-import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT_GROUP
@@ -35,7 +31,7 @@ import ru.sedavnyh.vkgroupscan.view.MainView
 import javax.inject.Inject
 
 class MainPresenter @Inject constructor(
-    val repository: Repository,
+    private val repository: Repository,
     private val mapper: FromResponseToEntityMapper,
     private var router: Router,
     private var context: Context
@@ -239,7 +235,10 @@ class MainPresenter @Inject constructor(
     }
 
     fun copyCommentToClipboard(comment: String) {
-        viewState.copyCommentToClipboard(comment)
+        val myClipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val myClip: ClipData = ClipData.newPlainText("Label", comment)
+        myClipboard.setPrimaryClip(myClip)
+        Toast.makeText(context, "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
     }
 
     fun createNotification(title: String) {

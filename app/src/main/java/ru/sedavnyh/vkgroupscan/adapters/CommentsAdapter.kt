@@ -1,7 +1,5 @@
 package ru.sedavnyh.vkgroupscan.adapters
 
-import android.content.ClipData
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
