@@ -70,7 +70,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun refreshComments() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             val groupId = mSort.getInt(APP_PREFERENCE_SORT_GROUP, 0)
             val loadedCommentsBefore = repository.local.countComments(groupId)
             repository.local.deleteComments(groupId)
@@ -128,12 +128,11 @@ class MainPresenter @Inject constructor(
             val loadedCommentsAfter = repository.local.countComments(groupId)
             setData()
             updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
-            sendToast("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
         }
     }
 
     fun insertIntoDb() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             val groups = repository.local.selectGroups()
             val loadedPostsBefore = repository.local.countPosts()
             var groupsCompleted = 0
@@ -182,17 +181,16 @@ class MainPresenter @Inject constructor(
             val loadedPostsAfter = repository.local.countPosts()
             setData()
             updateNotification("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
-            sendToast("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
         }
     }
 
     fun insertPost(post: PostEntity) {
-        GlobalScope.launch { repository.local.insertPost(post) }
+        GlobalScope.launch(Dispatchers.IO) { repository.local.insertPost(post) }
         setData()
     }
 
     fun checkGroupsExists() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             val groups = repository.local.selectGroups()
             if (groups.isNullOrEmpty()) {
                 var group = GroupEntity(
@@ -223,7 +221,7 @@ class MainPresenter @Inject constructor(
     }
 
     fun deletePost(post: PostEntity, position: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             repository.local.deletePost(post)
             lastItem = position
             setData()
@@ -300,10 +298,6 @@ class MainPresenter @Inject constructor(
                 .setOngoing(false)
             notificationManager.notify(1, notification.build())
         }
-    }
-
-    fun sendToast(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
     fun setSortOrder(sortOrder: String) {
