@@ -117,6 +117,8 @@ class MainPresenter @Inject constructor(
                     }
                 }
 
+                summaryComment.removeAll(listOf(""))
+
                 post.totalComments = summaryComment
                 repository.local.insertPost(post)
 
