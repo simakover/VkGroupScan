@@ -1,5 +1,7 @@
 package ru.sedavnyh.vkgroupscan.data.database
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
@@ -22,6 +24,14 @@ interface VkDao {
 
     @Delete
     suspend fun deletePost(post: PostEntity)
+
+    //posts LiveData
+    @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE ASC")
+    fun selectPostsAscLiveData(groupId: Int) : LiveData<List<PostEntity>>
+
+    @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE DESC")
+    fun selectPostsDescLiveData(groupId: Int) : LiveData<List<PostEntity>>
+
 
     //groups
     @Insert(onConflict = OnConflictStrategy.REPLACE)

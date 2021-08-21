@@ -6,9 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,7 +15,7 @@ import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.PostAdapter
-import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
+import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapterOld
 import ru.sedavnyh.vkgroupscan.databinding.FragmentPostsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
@@ -50,7 +48,7 @@ class PostsFragment : MvpAppCompatFragment(), MainView {
             mainPresenter::insertPost
         )
     }
-    private val vpAdapter by lazy { ViewPagerAdapter() }
+    private val vpAdapter by lazy { ViewPagerAdapterOld() }
     lateinit var mSort: SharedPreferences
     lateinit var tabLayout : TabLayout
 

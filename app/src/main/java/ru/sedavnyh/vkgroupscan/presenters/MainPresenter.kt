@@ -22,6 +22,7 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.navigation.Screens
+import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCES
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_SORT_GROUP
@@ -301,6 +302,6 @@ class MainPresenter @Inject constructor(
     }
 
     fun setSortOrder(sortOrder: String) {
-        mSort.edit().putString(APP_PREFERENCE_SORT, sortOrder).apply()
+        mSort.edit().putString(Constants.APP_PREFERENCE_SORT, sortOrder).apply()
     }
 }

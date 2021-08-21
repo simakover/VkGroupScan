@@ -1,4 +1,4 @@
-package ru.sedavnyh.vkgroupscan.adapters
+package ru.sedavnyh.vkgroupscan.adapters.groupAdapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +11,20 @@ import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.post_row.view.*
 import ru.sedavnyh.vkgroupscan.R
+import ru.sedavnyh.vkgroupscan.adapters.CommentsAdapter
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
 
-class PostAdapter(
-    val onDeleteClick: (PostEntity, Int) -> Unit,
+class SliceDoujinAdapter(
     val onTitleClick: (PostEntity) -> Unit,
-    val onInnerImageClick: (String, Int) -> Unit,
+    val onDeleteClick: (PostEntity, Int) -> Unit,
+    val onSnackBarUndo: (PostEntity) -> Unit,
     val onInnerCommentClick: (String) -> Unit,
-    val onSnackBarUndo: (PostEntity) -> Unit
-) : RecyclerView.Adapter<PostAdapter.MyViewHolder>() {
+): RecyclerView.Adapter<SliceDoujinAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val iAdapter by lazy { ImageAdapter(onImageClick = onInnerImageClick) }
         private val cAdapter by lazy { CommentsAdapter(onCommentClick = onInnerCommentClick) }
 
         fun bind(post: PostEntity, position: Int) {
@@ -38,6 +37,9 @@ class PostAdapter(
             itemView.group_avatar.load(post.groupAvatar) {
                 transformations(CircleCropTransformation())
             }
+
+            itemView.postImage.load(post.images[0])
+
             itemView.title_text_view.setOnClickListener {
                 onTitleClick.invoke(post)
             }
@@ -57,10 +59,6 @@ class PostAdapter(
                 }
                 snackBar.show()
             }
-//
-//            itemView.postImage.adapter = iAdapter
-//            itemView.postImage.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-//            iAdapter.setData(post.images, position)
 
             itemView.founded_links_recyclerView.adapter = cAdapter
             itemView.founded_links_recyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
@@ -68,7 +66,7 @@ class PostAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.post_row, parent, false)
         return MyViewHolder(view)
     }

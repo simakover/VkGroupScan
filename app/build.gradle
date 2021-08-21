@@ -74,4 +74,8 @@ dependencies {
     kapt "com.github.moxy-community:moxy-compiler:2.2.2"
     implementation "com.github.moxy-community:moxy-android:2.2.2"
     implementation "com.github.moxy-community:moxy-androidx:2.2.2"
+
+    //navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 }
