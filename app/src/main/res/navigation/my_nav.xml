@@ -17,5 +17,9 @@
     <fragment
         android:id="@+id/imageFragment"
         android:name="ru.sedavnyh.vkgroupscan.fragments.ImageFragment"
-        android:label="ImageFragment" />
+        android:label="ImageFragment" >
+        <argument
+            android:name="postEntityArg"
+            app:argType="ru.sedavnyh.vkgroupscan.models.entities.PostEntity" />
+    </fragment>
 </navigation>

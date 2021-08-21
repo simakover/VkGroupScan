@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.DoujinCapAdapter
@@ -14,6 +15,8 @@ import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.ScreensChinaAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentDoujinCapBinding
 import ru.sedavnyh.vkgroupscan.databinding.FragmentScreensChinaBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
+import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragmentDirections
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
 
@@ -33,7 +36,7 @@ class ScreensChinaFragment : Fragment() {
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
-        adapter = ScreensChinaAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard)
+        adapter = ScreensChinaAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard, ::goToImageFragment)
         binding.ScreensChinaRecyclerView.adapter = adapter
         binding.ScreensChinaRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -74,5 +77,11 @@ class ScreensChinaFragment : Fragment() {
             adapter.setData(it)
             binding.ScreensChinaRecyclerView.scrollToPosition(viewModel.lastItem)
         })
+    }
+
+    fun goToImageFragment(postEntity: PostEntity) {
+
+        val action = ViewPagerFragmentDirections.actionViewPagerFragmentToImageFragment(postEntity)
+        findNavController().navigate(action)
     }
 }

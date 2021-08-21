@@ -13,6 +13,8 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.AllGroupsAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentAllGroupsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
+import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragment
+import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragmentDirections
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
@@ -78,6 +80,8 @@ class AllGroupsFragment : Fragment() {
     }
 
     fun goToImageFragment(postEntity: PostEntity) {
-        findNavController().navigate(R.id.action_viewPagerFragment_to_imageFragment)
+
+        val action = ViewPagerFragmentDirections.actionViewPagerFragmentToImageFragment(postEntity)
+        findNavController().navigate(action)
     }
 }

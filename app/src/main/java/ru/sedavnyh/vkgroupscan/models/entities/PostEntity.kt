@@ -1,11 +1,13 @@
 package ru.sedavnyh.vkgroupscan.models.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
+import kotlinx.android.parcel.Parcelize
 import ru.sedavnyh.vkgroupscan.util.Constants
 
 @Entity(tableName = Constants.POSTS_TABLE)
+@Parcelize
 data class PostEntity (
     @PrimaryKey(autoGenerate = false)
     val id: Int,
@@ -18,4 +20,4 @@ data class PostEntity (
     var groupName: String,
     var totalComments: MutableList<String>,
     val images: List<String>
-)
+) : Parcelable

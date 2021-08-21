@@ -20,6 +20,7 @@ class SliceDoujinAdapter(
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onSnackBarUndo: (PostEntity) -> Unit,
     val onInnerCommentClick: (String) -> Unit,
+    val onImageClick: (PostEntity) -> Unit
 ): RecyclerView.Adapter<SliceDoujinAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
@@ -39,6 +40,10 @@ class SliceDoujinAdapter(
             }
 
             itemView.postImage.load(post.images[0])
+
+            itemView.postImage.setOnClickListener {
+                onImageClick.invoke(post)
+            }
 
             itemView.title_text_view.setOnClickListener {
                 onTitleClick.invoke(post)

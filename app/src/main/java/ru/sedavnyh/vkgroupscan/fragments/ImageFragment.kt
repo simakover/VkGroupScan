@@ -9,6 +9,7 @@ import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.android.material.tabs.TabLayout
@@ -25,6 +26,8 @@ class ImageFragment : Fragment() {
     private var uiHiden = false
     lateinit var tabLayout : TabLayout
 
+    val args: ImageFragmentArgs by navArgs()
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +35,12 @@ class ImageFragment : Fragment() {
     ): View? {
         _binding = FragmentImageBinding.inflate(inflater, container, false)
 
+        val posts = args.postEntityArg
+
         val adapter = ImageAdapter()
         binding.imageViewRecyclerView.adapter = adapter
-        binding.imageViewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.imageViewRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        adapter.setData(posts.images)
 
         tabLayout = requireActivity().findViewById(R.id.viewPagerTabsLayout)!!
 
@@ -52,13 +58,11 @@ class ImageFragment : Fragment() {
     private fun hideSystemUI() {
         uiHiden = true
         tabLayout.visibility = View.GONE
-        activity.supportActionBar?.hide()
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
     private fun showSystemUI() {
         uiHiden = false
         tabLayout.visibility = View.VISIBLE
-        activity.supportActionBar?.show()
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
 }
