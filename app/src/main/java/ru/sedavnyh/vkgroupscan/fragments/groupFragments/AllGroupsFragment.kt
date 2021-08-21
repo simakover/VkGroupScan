@@ -44,6 +44,11 @@ class AllGroupsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     override fun toString(): String {
         return "All"
     }

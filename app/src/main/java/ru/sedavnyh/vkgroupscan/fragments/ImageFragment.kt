@@ -38,8 +38,7 @@ class ImageFragment : Fragment() {
         val posts = args.postEntityArg
 
         val adapter = ImageAdapter()
-        binding.imageViewRecyclerView.adapter = adapter
-        binding.imageViewRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.imageViewViewPager.adapter = adapter
         adapter.setData(posts.images)
 
         tabLayout = requireActivity().findViewById(R.id.viewPagerTabsLayout)!!
@@ -52,6 +51,11 @@ class ImageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         showSystemUI()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

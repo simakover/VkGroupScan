@@ -47,6 +47,11 @@ class SliceDoujinFragment : Fragment() {
         return "A Slice of Doujin"
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.refresh_comments -> {

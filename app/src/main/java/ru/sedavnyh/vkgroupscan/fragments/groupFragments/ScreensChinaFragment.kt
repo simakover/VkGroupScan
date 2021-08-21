@@ -43,6 +43,11 @@ class ScreensChinaFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     override fun toString(): String {
         return "Кейтайские порномультики"
     }
