@@ -13,7 +13,6 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.AllGroupsAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentAllGroupsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
-import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragment
 import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragmentDirections
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel

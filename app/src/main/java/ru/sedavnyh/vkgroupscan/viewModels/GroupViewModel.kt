@@ -61,7 +61,7 @@ class GroupViewModel: ViewModel() {
     }
 
     fun refreshComments(groupId: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             val loadedCommentsBefore = repository.local.countComments(groupId)
             repository.local.deleteComments(groupId)
             val posts = repository.local.selectPostsDesc(groupId)
