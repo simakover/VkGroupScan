@@ -7,7 +7,6 @@ import android.os.Build
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
 import ru.sedavnyh.vkgroupscan.di.apiModule
 import ru.sedavnyh.vkgroupscan.di.databaseModule
-import ru.sedavnyh.vkgroupscan.di.navigationModule
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -22,7 +21,6 @@ class App @Inject constructor(): Application() {
             .openScope(APP_SCOPE)
             .installModules(
                 databaseModule(applicationContext),
-                navigationModule(),
                 apiModule())
     }
 

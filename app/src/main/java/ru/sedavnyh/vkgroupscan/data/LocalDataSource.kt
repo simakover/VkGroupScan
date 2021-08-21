@@ -1,7 +1,6 @@
 package ru.sedavnyh.vkgroupscan.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
@@ -16,10 +15,6 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
     }
     suspend fun selectPostsDesc(groupId : Int = 0): List<PostEntity> {
         return vkDao.selectPostsDesc(groupId)
-    }
-
-    suspend fun selectPostsAsc(groupId: Int = 0): List<PostEntity> {
-        return vkDao.selectPostsAsc(groupId)
     }
 
     suspend fun countPosts(): Int {

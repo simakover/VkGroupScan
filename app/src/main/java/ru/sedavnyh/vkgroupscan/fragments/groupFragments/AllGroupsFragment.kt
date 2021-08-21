@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.AllGroupsAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentAllGroupsBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
 
@@ -32,7 +34,7 @@ class AllGroupsFragment : Fragment() {
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
-        adapter = AllGroupsAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard)
+        adapter = AllGroupsAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard, ::goToImageFragment)
         binding.allGroupsRecyclerView.adapter = adapter
         binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -73,5 +75,9 @@ class AllGroupsFragment : Fragment() {
             adapter.setData(it)
             binding.allGroupsRecyclerView.scrollToPosition(viewModel.lastItem)
         })
+    }
+
+    fun goToImageFragment(postEntity: PostEntity) {
+        findNavController().navigate(R.id.action_viewPagerFragment_to_imageFragment)
     }
 }

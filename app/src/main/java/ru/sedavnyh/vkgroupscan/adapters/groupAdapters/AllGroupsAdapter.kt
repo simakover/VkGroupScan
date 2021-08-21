@@ -20,6 +20,7 @@ class AllGroupsAdapter(
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onSnackBarUndo: (PostEntity) -> Unit,
     val onInnerCommentClick: (String) -> Unit,
+    val onImageClick: (PostEntity) -> Unit
 ): RecyclerView.Adapter<AllGroupsAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
@@ -39,6 +40,10 @@ class AllGroupsAdapter(
             }
 
             itemView.postImage.load(post.images[0])
+
+            itemView.postImage.setOnClickListener {
+                onImageClick.invoke(post)
+            }
 
             itemView.title_text_view.setOnClickListener {
                 onTitleClick.invoke(post)

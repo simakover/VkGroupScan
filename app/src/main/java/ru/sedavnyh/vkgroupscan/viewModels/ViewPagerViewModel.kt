@@ -3,7 +3,6 @@ package ru.sedavnyh.vkgroupscan.viewModels
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
@@ -16,10 +15,7 @@ import ru.sedavnyh.vkgroupscan.data.Repository
 import ru.sedavnyh.vkgroupscan.di.Scopes
 import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.util.Constants
-import ru.sedavnyh.vkgroupscan.util.TextOperations
 import toothpick.Toothpick
 import javax.inject.Inject
 

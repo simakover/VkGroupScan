@@ -2,7 +2,6 @@ package ru.sedavnyh.vkgroupscan.util
 
 import androidx.recyclerview.widget.DiffUtil
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Post
 
 class PostDiffUtil(
     private val oldList: List<PostEntity>,

@@ -16,9 +16,6 @@ interface VkDao {
     @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 AND ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE DESC")
     suspend fun selectPostsDesc(groupId: Int) : List<PostEntity>
 
-    @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE ASC")
-    suspend fun selectPostsAsc(groupId: Int) : List<PostEntity>
-
     @Query("SELECT COUNT(1) FROM POSTS_TABLE")
     suspend fun countPosts(): Int
 

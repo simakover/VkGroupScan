@@ -1,6 +1,5 @@
 package ru.sedavnyh.vkgroupscan.util
 
-import android.util.Log
 import java.util.*
 
 class TextOperations {

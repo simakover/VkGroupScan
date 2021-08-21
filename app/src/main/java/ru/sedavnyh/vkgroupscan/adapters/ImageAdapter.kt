@@ -10,19 +10,14 @@ import kotlinx.android.synthetic.main.image_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.util.ListStringDiffUtil
 
-class ImageAdapter(
-    val onImageClick: (String, Int) -> Unit
-) : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
+class ImageAdapter : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
 
-    var dataList : List<String> = emptyList()
-    var postPosition : Int = 0
+    private var dataList = emptyList<String>()
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        fun bind(link: String) {
-            itemView.pic_imageView.load(link)
-            itemView.pic_imageView.setOnClickListener {
-                onImageClick.invoke(link, postPosition)
-            }
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(linkToImage: String) {
+            itemView.full_image_imageView.load(linkToImage)
         }
     }
 
@@ -39,12 +34,10 @@ class ImageAdapter(
         return dataList.size
     }
 
-    fun setData(links: List<String>, position: Int) {
+    fun setData(links: List<String>) {
         val postDiffUtil = ListStringDiffUtil(dataList, links)
         val postDiffResult = DiffUtil.calculateDiff(postDiffUtil)
         this.dataList = links
         postDiffResult.dispatchUpdatesTo(this)
-
-        postPosition = position
     }
 }

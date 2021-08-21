@@ -2,10 +2,7 @@ package ru.sedavnyh.vkgroupscan.util
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.res.ResourcesCompat
-import ru.sedavnyh.vkgroupscan.R
 
 class CustomTextView : AppCompatTextView {
     constructor(context: Context) : super(context)

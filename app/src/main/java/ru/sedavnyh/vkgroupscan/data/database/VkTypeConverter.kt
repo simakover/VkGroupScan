@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.Attachment
 
 class VkTypeConverter {
     var gson = Gson()

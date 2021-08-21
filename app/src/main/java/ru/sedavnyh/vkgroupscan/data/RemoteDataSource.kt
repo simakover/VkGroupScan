@@ -1,10 +1,8 @@
 package ru.sedavnyh.vkgroupscan.data
 
 import ru.sedavnyh.vkgroupscan.data.network.Api
-import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.WallGetCommentsResponse
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Response
-import ru.sedavnyh.vkgroupscan.models.wallGetModel.WallGetResponse
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
 import ru.sedavnyh.vkgroupscan.util.Constants.API_VERSION
 import ru.sedavnyh.vkgroupscan.util.Constants.THREAD_ITEMS_COUNT
