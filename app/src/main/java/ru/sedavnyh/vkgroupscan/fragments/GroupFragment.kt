@@ -1,4 +1,4 @@
-package ru.sedavnyh.vkgroupscan.fragments.groupFragments
+package ru.sedavnyh.vkgroupscan.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,33 +10,34 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.adapters.groupAdapters.DoujinCapAdapter
-import ru.sedavnyh.vkgroupscan.databinding.FragmentDoujinCapBinding
+import ru.sedavnyh.vkgroupscan.adapters.GroupAdapter
+import ru.sedavnyh.vkgroupscan.databinding.FragmentGroupBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
-import ru.sedavnyh.vkgroupscan.fragments.ViewPagerFragmentDirections
+import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
 
-class DoujinCapFragment : Fragment() {
-    lateinit var viewModel: GroupViewModel
-    lateinit var adapter: DoujinCapAdapter
+class GroupFragment(val group : GroupEntity) : Fragment() {
 
-    private var _binding: FragmentDoujinCapBinding? = null
+    lateinit var viewModel: GroupViewModel
+    lateinit var adapter: GroupAdapter
+
+    private var _binding: FragmentGroupBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDoujinCapBinding.inflate(inflater, container, false)
+        _binding = FragmentGroupBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
-        adapter = DoujinCapAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard, ::goToImageFragment)
-        binding.DoujinCapRecyclerView.adapter = adapter
-        binding.DoujinCapRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard, ::goToImageFragment)
+        binding.allGroupsRecyclerView.adapter = adapter
+        binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         setObserver()
 
@@ -49,13 +50,13 @@ class DoujinCapFragment : Fragment() {
     }
 
     override fun toString(): String {
-        return "Doujin Cap"
+        return group.title
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.refresh_comments -> {
-                viewModel.refreshComments(-184665352)
+                viewModel.refreshComments(group.id)
             }
             R.id.menu_date_desc -> {
                 removeObserver()
@@ -72,13 +73,13 @@ class DoujinCapFragment : Fragment() {
     }
 
     private fun removeObserver() {
-        viewModel.getData(-184665352).removeObservers(viewLifecycleOwner)
+        viewModel.getData(group.id).removeObservers(viewLifecycleOwner)
     }
 
     private fun setObserver() {
-        viewModel.getData(-184665352).observe(viewLifecycleOwner, {
+        viewModel.getData(group.id).observe(viewLifecycleOwner, {
             adapter.setData(it)
-            binding.DoujinCapRecyclerView.scrollToPosition(viewModel.lastItem)
+            binding.allGroupsRecyclerView.scrollToPosition(viewModel.lastItem)
         })
     }
 

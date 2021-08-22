@@ -7,12 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_pager.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
-import ru.sedavnyh.vkgroupscan.fragments.groupFragments.AllGroupsFragment
-import ru.sedavnyh.vkgroupscan.fragments.groupFragments.DoujinCapFragment
-import ru.sedavnyh.vkgroupscan.fragments.groupFragments.ScreensChinaFragment
-import ru.sedavnyh.vkgroupscan.fragments.groupFragments.SliceDoujinFragment
+import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
 
 class ViewPagerFragment : Fragment() {
@@ -25,25 +25,25 @@ class ViewPagerFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_view_pager, container, false)
 
-        val fragmentList = arrayListOf<Fragment>(
-            AllGroupsFragment(),
-            SliceDoujinFragment(),
-            DoujinCapFragment(),
-            ScreensChinaFragment()
-        )
-
-        val adapter = ViewPagerAdapter(
-            fragmentList,
-            requireActivity().supportFragmentManager,
-            lifecycle
-        )
-        view.viewPager.adapter = adapter
-        TabLayoutMediator(view.viewPagerTabsLayout, view.viewPager) { tab, position ->
-            tab.text = fragmentList[position].toString()
-        }.attach()
-
         mainViewModel = ViewModelProvider(this).get(ViewPagerViewModel::class.java)
 
+        GlobalScope.launch(Dispatchers.Main){
+            val groups = mainViewModel.repository.local.selectGroups()
+            val fragmentList : ArrayList<Fragment> = mutableListOf<Fragment>() as ArrayList<Fragment>
+            fragmentList.add(GroupFragment(GroupEntity(0,0,"All","")))
+            groups.map {
+                fragmentList.add(GroupFragment(it))
+            }
+            val adapter = ViewPagerAdapter(
+                fragmentList,
+                requireActivity().supportFragmentManager,
+                lifecycle
+            )
+            view.viewPager.adapter = adapter
+            TabLayoutMediator(view.viewPagerTabsLayout, view.viewPager) { tab, position ->
+                tab.text = fragmentList[position].toString()
+            }.attach()
+        }
         return view
     }
 

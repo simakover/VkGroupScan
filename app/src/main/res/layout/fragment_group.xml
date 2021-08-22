@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.groupFragments.ScreensChinaFragment">
+    tools:context=".fragments.GroupFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ScreensChinaRecyclerView"
+        android:id="@+id/allGroupsRecyclerView"
         android:layout_width="match_parent"
+        android:scrollbars="vertical"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        />
 </FrameLayout>

@@ -1,4 +1,4 @@
-package ru.sedavnyh.vkgroupscan.adapters.groupAdapters
+package ru.sedavnyh.vkgroupscan.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +11,16 @@ import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.post_row.view.*
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.adapters.CommentsAdapter
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
 
-class DoujinCapAdapter(
+class GroupAdapter(
     val onTitleClick: (PostEntity) -> Unit,
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onSnackBarUndo: (PostEntity) -> Unit,
     val onInnerCommentClick: (String) -> Unit,
     val onImageClick: (PostEntity) -> Unit
-): RecyclerView.Adapter<DoujinCapAdapter.MyViewHolder>() {
+): RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,8 +37,11 @@ class DoujinCapAdapter(
             itemView.group_avatar.load(post.groupAvatar) {
                 transformations(CircleCropTransformation())
             }
+            try {
+                itemView.postImage.load(post.images.first())
+            } catch (e: Exception) {
 
-            itemView.postImage.load(post.images[0])
+            }
 
             itemView.postImage.setOnClickListener {
                 onImageClick.invoke(post)
@@ -50,7 +52,7 @@ class DoujinCapAdapter(
             }
 
             itemView.group_avatar.setOnClickListener {
-                onTitleClick.invoke(post)
+               onTitleClick.invoke(post)
             }
 
             itemView.delete_post_button.setOnClickListener {
