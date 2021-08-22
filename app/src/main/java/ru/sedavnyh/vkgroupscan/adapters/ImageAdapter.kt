@@ -17,7 +17,10 @@ class ImageAdapter : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(linkToImage: String) {
-            itemView.full_image_imageView.load(linkToImage)
+            itemView.full_image_imageView.load(linkToImage) {
+                crossfade(true)
+                placeholder(R.drawable.ic_broken_image)
+            }
         }
     }
 

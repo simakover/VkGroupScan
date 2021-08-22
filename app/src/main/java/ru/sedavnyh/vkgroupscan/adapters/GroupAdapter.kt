@@ -38,9 +38,12 @@ class GroupAdapter(
                 transformations(CircleCropTransformation())
             }
             try {
-                itemView.postImage.load(post.images.first())
+                itemView.postImage.load(post.images.first()) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_broken_image)
+                }
             } catch (e: Exception) {
-
+                itemView.postImage.load(R.drawable.ic_broken_image)
             }
 
             itemView.postImage.setOnClickListener {
