@@ -35,6 +35,7 @@ class ViewPagerFragment : Fragment() {
 
         GlobalScope.launch(Dispatchers.Main) {
             val groups = mainViewModel.repository.local.selectGroups()
+            fragmentList.clear()
             fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
             groups.map {
                 fragmentList.add(GroupFragment(it))
