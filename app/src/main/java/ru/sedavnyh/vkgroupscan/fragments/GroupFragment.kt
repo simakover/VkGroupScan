@@ -1,5 +1,7 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -15,8 +17,10 @@ import ru.sedavnyh.vkgroupscan.databinding.FragmentGroupBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
+import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
+import java.lang.Exception
 
 class GroupFragment(val group : GroupEntity) : Fragment() {
 
@@ -25,6 +29,8 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
 
     private var _binding: FragmentGroupBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var mSort: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +45,8 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
         binding.allGroupsRecyclerView.adapter = adapter
         binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        setObserver()
+        mSort = requireContext().getSharedPreferences(Constants.APP_PREFERENCES, Context.MODE_PRIVATE)
+        setObserverWithPriority()
 
         return binding.root
     }
@@ -58,29 +65,22 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
             R.id.refresh_comments -> {
                 viewModel.refreshComments(group.id)
             }
-            R.id.menu_date_desc -> {
-                removeObserver()
-                viewModel.setSortOrder("DESC")
-                setObserver()
-            }
-            R.id.menu_date_asc -> {
-                removeObserver()
-                viewModel.setSortOrder("ASC")
-                setObserver()
-            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun removeObserver() {
-        viewModel.getData(group.id).removeObservers(viewLifecycleOwner)
-    }
-
-    private fun setObserver() {
-        viewModel.getData(group.id).observe(viewLifecycleOwner, {
-            adapter.setData(it)
-            binding.allGroupsRecyclerView.scrollToPosition(viewModel.lastItem)
-        })
+    fun setObserverWithPriority(priority : String? = "") {
+        var sortOrder = if (priority == "") {
+            mSort.getString(Constants.APP_PREFERENCE_SORT, "DESC")
+        } else {
+            priority
+        }
+        try {
+            viewModel.getData(group.id, sortOrder!!).observe(viewLifecycleOwner, {
+                adapter.setData(it)
+                binding.allGroupsRecyclerView.scrollToPosition(viewModel.lastItem)
+            })
+        } catch (e : Exception) {}
     }
 
     fun goToImageFragment(postEntity: PostEntity) {

@@ -5,13 +5,11 @@ import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -52,12 +50,11 @@ class GroupViewModel: ViewModel() {
         mSort = context.getSharedPreferences(Constants.APP_PREFERENCES, Context.MODE_PRIVATE)
     }
 
-    fun getData(groupId: Int) : LiveData<List<PostEntity>> {
-        val sortOrder = mSort.getString(Constants.APP_PREFERENCE_SORT, "DESC")
-        if (sortOrder == "ASC")
-            return repository.local.selectPostsAscLiveData(groupId)
+    fun getData(groupId: Int, priority: String = "DESC") : LiveData<List<PostEntity>> {
+        return if (priority == "ASC")
+            repository.local.selectPostsAscLiveData(groupId)
         else
-            return repository.local.selectPostsDescLiveData(groupId)
+            repository.local.selectPostsDescLiveData(groupId)
     }
 
     fun refreshComments(groupId: Int) {
@@ -156,10 +153,6 @@ class GroupViewModel: ViewModel() {
                 .setOngoing(false)
             notificationManager.notify(1, notification.build())
         }
-    }
-
-    fun setSortOrder(sortOrder: String) {
-        mSort.edit().putString(Constants.APP_PREFERENCE_SORT, sortOrder).apply()
     }
 
     fun goToPostPage(post: PostEntity) {
