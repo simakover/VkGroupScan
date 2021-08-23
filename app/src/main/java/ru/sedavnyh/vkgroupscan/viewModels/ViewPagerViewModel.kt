@@ -41,7 +41,6 @@ class ViewPagerViewModel: ViewModel() {
 
     init{
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
-        checkGroupsExists()
         notificationManager = NotificationManagerCompat.from(context)
     }
 
@@ -99,6 +98,7 @@ class ViewPagerViewModel: ViewModel() {
 
     suspend fun getGroupFragments() : ArrayList<Fragment> {
         if (fragmentList.isNullOrEmpty()) {
+            checkGroupsExists()
             val groups = repository.local.selectGroups()
             fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
             groups.map {
@@ -108,8 +108,7 @@ class ViewPagerViewModel: ViewModel() {
         return  fragmentList
     }
 
-    private fun checkGroupsExists() {
-        GlobalScope.launch(Dispatchers.IO) {
+    private suspend fun checkGroupsExists() {
             val groups = repository.local.selectGroups()
             if (groups.isNullOrEmpty()) {
                 var group = GroupEntity(
@@ -136,7 +135,6 @@ class ViewPagerViewModel: ViewModel() {
                 )
                 repository.local.insertGroup(group)
             }
-        }
     }
 
     private fun createNotification(title: String) {

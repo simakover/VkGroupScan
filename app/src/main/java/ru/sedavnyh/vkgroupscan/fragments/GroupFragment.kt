@@ -20,7 +20,6 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
-import java.lang.Exception
 
 class GroupFragment(val group : GroupEntity) : Fragment() {
 
@@ -78,7 +77,6 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
         try {
             viewModel.getData(group.id, sortOrder!!).observe(viewLifecycleOwner, {
                 adapter.setData(it)
-                binding.allGroupsRecyclerView.scrollToPosition(viewModel.lastItem)
             })
         } catch (e : Exception) {}
     }

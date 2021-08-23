@@ -40,8 +40,8 @@ class CommentsAdapter(
 
     fun setData(links: List<String>) {
         val commentDiffUtil = ListStringDiffUtil(dataList, links)
-        val postDiffResult = DiffUtil.calculateDiff(commentDiffUtil)
+        val commentDiffResult = DiffUtil.calculateDiff(commentDiffUtil)
         this.dataList = links
-        postDiffResult.dispatchUpdatesTo(this)
+        commentDiffResult.dispatchUpdatesTo(this)
     }
 }
