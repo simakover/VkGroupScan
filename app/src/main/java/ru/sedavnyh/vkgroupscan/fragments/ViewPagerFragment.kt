@@ -14,14 +14,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
-import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
 
 class ViewPagerFragment : Fragment() {
 
     lateinit var mainViewModel: ViewPagerViewModel
-    private val fragmentList: ArrayList<Fragment> = mutableListOf<Fragment>() as ArrayList<Fragment>
+    private var fragmentList: ArrayList<Fragment> = mutableListOf<Fragment>() as ArrayList<Fragment>
     private lateinit var mSort: SharedPreferences
 
     override fun onCreateView(
@@ -34,12 +33,7 @@ class ViewPagerFragment : Fragment() {
         mSort = requireContext().getSharedPreferences(Constants.APP_PREFERENCES, Context.MODE_PRIVATE)
 
         GlobalScope.launch(Dispatchers.Main) {
-            val groups = mainViewModel.repository.local.selectGroups()
-            fragmentList.clear()
-            fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
-            groups.map {
-                fragmentList.add(GroupFragment(it))
-            }
+            fragmentList = mainViewModel.getGroupFragments()
             val adapter = ViewPagerAdapter(
                 fragmentList,
                 requireActivity().supportFragmentManager,

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -13,6 +14,7 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.activities.MainActivity
 import ru.sedavnyh.vkgroupscan.data.Repository
 import ru.sedavnyh.vkgroupscan.di.Scopes
+import ru.sedavnyh.vkgroupscan.fragments.GroupFragment
 import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.util.Constants
@@ -35,6 +37,7 @@ class ViewPagerViewModel: ViewModel() {
     private var notificationManager: NotificationManagerCompat
     private val channelId = "Progress Notification"
 
+    private val fragmentList: ArrayList<Fragment> = mutableListOf<Fragment>() as ArrayList<Fragment>
 
     init{
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
@@ -90,9 +93,19 @@ class ViewPagerViewModel: ViewModel() {
                 updateNotification("Групп обработано: $groupsCompleted/${groups.size}", groupsCompleted, groups.size)
             }
             val loadedPostsAfter = repository.local.countPosts()
-//            setData()
             updateNotification("Загружено постов: ${loadedPostsAfter - loadedPostsBefore}")
         }
+    }
+
+    suspend fun getGroupFragments() : ArrayList<Fragment> {
+        if (fragmentList.isNullOrEmpty()) {
+            val groups = repository.local.selectGroups()
+            fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
+            groups.map {
+                fragmentList.add(GroupFragment(it))
+            }
+        }
+        return  fragmentList
     }
 
     private fun checkGroupsExists() {

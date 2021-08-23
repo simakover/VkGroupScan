@@ -10,8 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
 import com.google.android.material.tabs.TabLayout
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ImageAdapter
@@ -23,7 +21,6 @@ class ImageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var activity : AppCompatActivity
-    private var uiHiden = false
     lateinit var tabLayout : TabLayout
 
     val args: ImageFragmentArgs by navArgs()
@@ -60,12 +57,10 @@ class ImageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun hideSystemUI() {
-        uiHiden = true
         tabLayout.visibility = View.GONE
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
     private fun showSystemUI() {
-        uiHiden = false
         tabLayout.visibility = View.VISIBLE
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
