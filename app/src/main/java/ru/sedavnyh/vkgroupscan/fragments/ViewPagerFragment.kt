@@ -16,6 +16,9 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
 import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
+import android.content.Intent
+import ru.sedavnyh.vkgroupscan.activities.MainActivity
+
 
 class ViewPagerFragment : Fragment() {
 
@@ -72,8 +75,9 @@ class ViewPagerFragment : Fragment() {
 
     private fun setSortOrder(sortOrder: String) {
         mSort.edit().putString(Constants.APP_PREFERENCE_SORT, sortOrder).apply()
-        fragmentList.map {
-            (it as GroupFragment).setObserverWithPriority(sortOrder)
-        }
+
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        requireActivity().startActivity(intent)
+        requireActivity().finishAffinity()
     }
 }

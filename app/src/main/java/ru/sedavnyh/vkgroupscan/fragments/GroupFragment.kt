@@ -68,12 +68,8 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun setObserverWithPriority(priority : String? = "") {
-        var sortOrder = if (priority == "") {
-            mSort.getString(Constants.APP_PREFERENCE_SORT, "DESC")
-        } else {
-            priority
-        }
+    fun setObserverWithPriority() {
+        var sortOrder = mSort.getString(Constants.APP_PREFERENCE_SORT, "DESC")
         try {
             viewModel.getData(group.id, sortOrder!!).observe(viewLifecycleOwner, {
                 adapter.setData(it)
