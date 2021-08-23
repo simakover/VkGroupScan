@@ -17,7 +17,10 @@ import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
 import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
 import android.content.Intent
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import ru.sedavnyh.vkgroupscan.activities.MainActivity
+import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_LAST_TAB
 
 
 class ViewPagerFragment : Fragment() {
@@ -46,6 +49,15 @@ class ViewPagerFragment : Fragment() {
             TabLayoutMediator(view.viewPagerTabsLayout, view.viewPager) { tab, position ->
                 tab.text = fragmentList[position].toString()
             }.attach()
+
+            view.viewPager.setCurrentItem(mSort.getInt(APP_PREFERENCE_LAST_TAB, 0), false)
+
+            view.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    mSort.edit().putInt(APP_PREFERENCE_LAST_TAB, position).apply()
+                }
+            })
         }
         return view
     }
