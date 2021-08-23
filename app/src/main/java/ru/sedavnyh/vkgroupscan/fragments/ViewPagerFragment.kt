@@ -62,19 +62,18 @@ class ViewPagerFragment : Fragment() {
         when (item.itemId) {
             R.id.refresh_groups ->
                 mainViewModel.insertIntoDb()
-            R.id.menu_date_desc -> {
-                mSort.edit().putString(Constants.APP_PREFERENCE_SORT, "DESC").apply()
-                fragmentList.map {
-                    (it as GroupFragment).setObserverWithPriority("DESC")
-                }
-            }
-            R.id.menu_date_asc -> {
-                mSort.edit().putString(Constants.APP_PREFERENCE_SORT, "ASC").apply()
-                fragmentList.map {
-                    (it as GroupFragment).setObserverWithPriority("ASC")
-                }
-            }
+            R.id.menu_date_desc ->
+                setSortOrder("DESC")
+            R.id.menu_date_asc ->
+                setSortOrder("ASC")
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setSortOrder(sortOrder: String) {
+        mSort.edit().putString(Constants.APP_PREFERENCE_SORT, sortOrder).apply()
+        fragmentList.map {
+            (it as GroupFragment).setObserverWithPriority(sortOrder)
+        }
     }
 }
