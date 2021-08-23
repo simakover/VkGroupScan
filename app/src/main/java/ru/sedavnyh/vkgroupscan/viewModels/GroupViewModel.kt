@@ -66,7 +66,9 @@ class GroupViewModel: ViewModel() {
             createNotification("Загрузка комментариев")
 
             posts.map { post ->
-                val summaryComment: MutableList<String> = mutableListOf()
+                var summaryComment: MutableList<String> = mutableListOf()
+                summaryComment.add(post.text)
+                summaryComment.addAll(post.totalComments)
                 val loadedComments = repository.remote.wallGetComments(
                     post.ownerId.toString(),
                     post.id.toString()
@@ -106,7 +108,7 @@ class GroupViewModel: ViewModel() {
 
                 summaryComment.removeAll(listOf(""))
 
-                post.totalComments = summaryComment
+                post.totalComments = summaryComment.toMutableSet().toMutableList()
                 repository.local.insertPost(post)
 
                 postCompleted += 1

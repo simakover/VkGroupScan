@@ -31,9 +31,6 @@ class GroupAdapter(
 
             itemView.title_text_view.text = post.groupName
 
-            itemView.description_text_view.text = post.text
-            itemView.description_text_view.fixTextSelection()
-
             itemView.group_avatar.load(post.groupAvatar) {
                 transformations(CircleCropTransformation())
             }

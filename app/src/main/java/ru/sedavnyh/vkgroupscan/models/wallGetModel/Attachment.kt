@@ -7,5 +7,9 @@ data class Attachment(
     @SerializedName("photo")
     val photo: Photo?,
     @SerializedName("type")
-    val type: String?
+    val type: String?,
+    @SerializedName("album")
+    val album : Album?,
+    @SerializedName("link")
+    val link : Link?
 )
