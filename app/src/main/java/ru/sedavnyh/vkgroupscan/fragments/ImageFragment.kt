@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -54,7 +55,7 @@ class ImageFragment : Fragment() {
         activity.setSupportActionBar(binding.imageToolbar)
         setHasOptionsMenu(true)
         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        activity.supportActionBar?.title = "1 из ${post.images.size})"
+        activity.window.statusBarColor = ContextCompat.getColor(activity,R.color.black)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -67,6 +68,7 @@ class ImageFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.purple_700)
     }
 
     override fun onDestroy() {

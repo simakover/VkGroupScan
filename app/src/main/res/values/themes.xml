@@ -15,4 +15,12 @@
         <item name="titleTextColor">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
     </style>
+    <style name="ImageFragment" parent="Theme.VkGroupScan">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:background">@color/black</item>
+    </style>
 </resources>
