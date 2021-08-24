@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_view_pager" >
         <action
             android:id="@+id/action_viewPagerFragment_to_imageFragment"
-            app:destination="@id/imageFragment" />
+            app:destination="@id/imageFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/imageFragment"

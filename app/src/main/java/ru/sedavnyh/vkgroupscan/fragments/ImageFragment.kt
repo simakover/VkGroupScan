@@ -41,13 +41,13 @@ class ImageFragment : Fragment() {
         tabLayout = requireActivity().findViewById(R.id.viewPagerTabsLayout)!!
 
         activity  = requireActivity() as AppCompatActivity
-        hideSystemUI()
+//        hideSystemUI()
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        showSystemUI()
+//        showSystemUI()
     }
 
     override fun onDestroy() {
@@ -57,11 +57,9 @@ class ImageFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun hideSystemUI() {
-        tabLayout.visibility = View.GONE
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
     private fun showSystemUI() {
-        tabLayout.visibility = View.VISIBLE
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
     }
 }
