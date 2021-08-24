@@ -2,15 +2,13 @@ package ru.sedavnyh.vkgroupscan.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.util.Log
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.tabs.TabLayout
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ImageAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentImageBinding
@@ -21,9 +19,8 @@ class ImageFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var activity : AppCompatActivity
-    lateinit var tabLayout : TabLayout
 
-    val args: ImageFragmentArgs by navArgs()
+    private val args: ImageFragmentArgs by navArgs()
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
@@ -38,16 +35,27 @@ class ImageFragment : Fragment() {
         binding.imageViewViewPager.adapter = adapter
         adapter.setData(posts.images)
 
-        tabLayout = requireActivity().findViewById(R.id.viewPagerTabsLayout)!!
-
         activity  = requireActivity() as AppCompatActivity
-//        hideSystemUI()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (context as AppCompatActivity).setSupportActionBar(binding.imageToolbar)
+        setHasOptionsMenu(true)
+        (context as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> findNavController().navigate(R.id.action_imageFragment_to_viewPagerFragment2)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        showSystemUI()
+        _binding = null
     }
 
     override fun onDestroy() {

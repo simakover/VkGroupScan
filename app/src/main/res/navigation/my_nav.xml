@@ -25,5 +25,10 @@
         <argument
             android:name="postEntityArg"
             app:argType="ru.sedavnyh.vkgroupscan.models.entities.PostEntity" />
+        <action
+            android:id="@+id/action_imageFragment_to_viewPagerFragment2"
+            app:destination="@id/viewPagerFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right" />
     </fragment>
 </navigation>
