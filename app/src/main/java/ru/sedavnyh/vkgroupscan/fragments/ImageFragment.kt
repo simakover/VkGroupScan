@@ -2,16 +2,17 @@ package ru.sedavnyh.vkgroupscan.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.viewpager2.widget.ViewPager2
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ImageAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentImageBinding
+import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 
 class ImageFragment : Fragment() {
 
@@ -22,6 +23,8 @@ class ImageFragment : Fragment() {
 
     private val args: ImageFragmentArgs by navArgs()
 
+    private lateinit var post : PostEntity
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,21 +32,29 @@ class ImageFragment : Fragment() {
     ): View? {
         _binding = FragmentImageBinding.inflate(inflater, container, false)
 
-        val posts = args.postEntityArg
+        post = args.postEntityArg
 
         val adapter = ImageAdapter()
         binding.imageViewViewPager.adapter = adapter
-        adapter.setData(posts.images)
+        adapter.setData(post.images)
 
         activity  = requireActivity() as AppCompatActivity
+
+        binding.imageViewViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                activity.supportActionBar?.title = "${position + 1} из ${post.images.size}"
+            }
+        })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (context as AppCompatActivity).setSupportActionBar(binding.imageToolbar)
+        activity.setSupportActionBar(binding.imageToolbar)
         setHasOptionsMenu(true)
-        (context as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar?.title = "1 из ${post.images.size})"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
