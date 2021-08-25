@@ -1,5 +1,7 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -58,11 +60,30 @@ class ImageFragment : Fragment() {
         activity.window.statusBarColor = ContextCompat.getColor(activity,R.color.black)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.images_menu, menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             android.R.id.home -> findNavController().navigate(R.id.action_imageFragment_to_viewPagerFragment2)
+            R.id.search_image -> {
+                val link = post.images[binding.imageViewViewPager.currentItem]
+                findImage(link)
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun findImage(link: String) {
+        val endLink = java.net.URLEncoder.encode(link, "utf-8")
+        val uris = Uri.parse("https://yandex.ru/images/search?rpt=imageview&url=$endLink")
+        val intents = Intent(Intent.ACTION_VIEW, uris)
+        val bundle = Bundle()
+        bundle.putBoolean("new_window", true)
+        intents.putExtras(bundle)
+        ContextCompat.startActivity(requireContext(), intents, bundle)
     }
 
     override fun onDestroyView() {

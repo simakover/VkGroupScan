@@ -182,6 +182,14 @@ class ViewPagerViewModel : ViewModel() {
                 "https://sun1-85.userapi.com/s/v1/if1/TEM6dilWGeluaYapMWeFDaVkQDLE3q99_b--9XKZExJjppA7RvzC5swB1A1kJOaT1UBMEtNH.jpg?size=50x50&quality=96&crop=10,10,490,490&ava=1"
             )
             repository.local.insertGroup(group)
+
+            group = GroupEntity(
+                -202639237,
+                170, // 324
+                "hellokittipunk",
+                "https://sun1-96.userapi.com/s/v1/ig2/HYS9Xb9COJzI1IlpcNjCaONTuIXkvq_qND1Z7qJLPisYytsryBr9JTJSYMZGPsOhzKdEt8ZLxNXvNLDmR5ORF1L-.jpg?size=50x50&quality=96&crop=4,4,968,968&ava=1"
+            )
+            repository.local.insertGroup(group)
         }
     }
 
