@@ -74,42 +74,44 @@ class GroupViewModel: ViewModel() {
                     post.id.toString()
                 )
                 Thread.sleep(500)
-                loadedComments.response?.items?.map {
+                try {
+                    loadedComments.response?.items?.map {
 
-                    it.text = TextOperations().cleanComment(it.text)
-                    if (!it.text.isNullOrEmpty()) {
-                        summaryComment.add(it.text!!)
-                    }
-                    repository.local.insertComment(it)
-
-                    it.respondThread?.items?.map { respComm ->
-                        val comment = Comment(
-                            respComm.id,
-                            respComm.fromId,
-                            respComm.ownerId,
-                            respComm.postId,
-                            respComm.text,
-                            RespondThread(null)
-                        )
-                        respComm.text = TextOperations().cleanComment(respComm.text)
-                        if (!respComm.text.isNullOrEmpty()) {
-                            summaryComment.add(respComm.text!!)
+                        it.text = TextOperations().cleanComment(it.text)
+                        if (!it.text.isNullOrEmpty()) {
+                            summaryComment.add(it.text!!)
                         }
-                        repository.local.insertComment(comment)
+                        repository.local.insertComment(it)
+
+                        it.respondThread?.items?.map { respComm ->
+                            val comment = Comment(
+                                respComm.id,
+                                respComm.fromId,
+                                respComm.ownerId,
+                                respComm.postId,
+                                respComm.text,
+                                RespondThread(null)
+                            )
+                            respComm.text = TextOperations().cleanComment(respComm.text)
+                            if (!respComm.text.isNullOrEmpty()) {
+                                summaryComment.add(respComm.text!!)
+                            }
+                            repository.local.insertComment(comment)
+                        }
                     }
-                }
 
-                val cleanDescription = TextOperations().cleanDescription(post.text)
-                if (!cleanDescription.isNullOrEmpty()) {
-                    cleanDescription.map {
-                        summaryComment.add(it)
+                    val cleanDescription = TextOperations().cleanDescription(post.text)
+                    if (!cleanDescription.isNullOrEmpty()) {
+                        cleanDescription.map {
+                            summaryComment.add(it)
+                        }
                     }
-                }
 
-                summaryComment.removeAll(listOf(""))
+                    summaryComment.removeAll(listOf(""))
 
-                post.totalComments = summaryComment.toMutableSet().toMutableList()
-                repository.local.insertPost(post)
+                    post.totalComments = summaryComment.toMutableSet().toMutableList()
+                    repository.local.insertPost(post)
+                } catch (e: Exception) {}
 
                 postCompleted += 1
                 updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)

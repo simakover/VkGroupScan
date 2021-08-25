@@ -3,6 +3,7 @@ package ru.sedavnyh.vkgroupscan.viewModels
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
@@ -54,40 +55,41 @@ class ViewPagerViewModel : ViewModel() {
                 var offset = 0
                 var response = repository.remote.wallGet(group.id.toString(), "1", offset.toString())
                 Thread.sleep(500)
+                try {
+                    while (group.postCount < response?.count!!) {
+                        var loadCount: Int
+                        loadCount = if (response.posts?.first()?.isPinned == 1) {
+                            response.count!! - group.postCount + 1
+                        } else {
+                            response.count!! - group.postCount
+                        }
 
-                while (group.postCount < response?.count!!) {
-                    var loadCount: Int
-                    loadCount = if (response.posts?.first()?.isPinned == 1) {
-                        response.count!! - group.postCount + 1
-                    } else {
-                        response.count!! - group.postCount
+                        var notloaded = 0
+                        if (loadCount > Constants.POST_LOAD_COUNT) {
+                            notloaded = loadCount - Constants.POST_LOAD_COUNT
+                            loadCount = Constants.POST_LOAD_COUNT
+                        }
+
+                        response =
+                            repository.remote.wallGet(group.id.toString(), loadCount.toString(), offset.toString())
+                        Thread.sleep(500)
+
+                        response?.posts?.map { post ->
+                            post.groupAvatar = group.avatar
+                            post.groupName = group.title
+                            repository.local.insertPost(mapper.mapToPostEntity(post))
+                        }
+
+                        if (response?.posts?.first()?.isPinned == 1 && notloaded == 0) {
+                            group.postCount += loadCount - 1
+                        } else {
+                            group.postCount += loadCount
+                        }
+
+                        offset += loadCount
+                        repository.local.updateGroup(group)
                     }
-
-                    var notloaded = 0
-                    if (loadCount > Constants.POST_LOAD_COUNT) {
-                        notloaded = loadCount - Constants.POST_LOAD_COUNT
-                        loadCount = Constants.POST_LOAD_COUNT
-                    }
-
-                    response =
-                        repository.remote.wallGet(group.id.toString(), loadCount.toString(), offset.toString())
-                    Thread.sleep(500)
-
-                    response?.posts?.map { post ->
-                        post.groupAvatar = group.avatar
-                        post.groupName = group.title
-                        repository.local.insertPost(mapper.mapToPostEntity(post))
-                    }
-
-                    if (response?.posts?.first()?.isPinned == 1 && notloaded == 0) {
-                        group.postCount += loadCount - 1
-                    } else {
-                        group.postCount += loadCount
-                    }
-
-                    offset += loadCount
-                    repository.local.updateGroup(group)
-                }
+                } catch (e: Exception) { }
                 groupsCompleted += 1
                 updateNotification("Групп обработано: $groupsCompleted/${groups.size}", groupsCompleted, groups.size)
             }
