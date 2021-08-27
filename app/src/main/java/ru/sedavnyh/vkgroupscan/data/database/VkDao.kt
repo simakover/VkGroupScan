@@ -29,6 +29,9 @@ interface VkDao {
     @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE DESC")
     fun selectPostsDescLiveData(groupId: Int) : LiveData<List<PostEntity>>
 
+    @Query("SELECT COUNT(1) FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId))")
+    fun postCount(groupId: Int) : LiveData<Int>
+
 
     //groups
     @Insert(onConflict = OnConflictStrategy.REPLACE)

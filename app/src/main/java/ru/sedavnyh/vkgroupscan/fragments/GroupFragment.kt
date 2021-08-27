@@ -55,10 +55,6 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
         _binding = null
     }
 
-    override fun toString(): String {
-        return group.title
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.refresh_comments -> {

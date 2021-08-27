@@ -47,7 +47,10 @@ class ViewPagerFragment : Fragment() {
             )
             view.viewPager.adapter = adapter
             TabLayoutMediator(view.viewPagerTabsLayout, view.viewPager) { tab, position ->
-                tab.text = fragmentList[position].toString()
+                val group = (fragmentList[position] as GroupFragment).group
+                mainViewModel.repository.local.postCount(group.id).observe(viewLifecycleOwner, {
+                    tab.text = group.title + " (${it})"
+                })
             }.attach()
 
             view.viewPager.setCurrentItem(mSort.getInt(APP_PREFERENCE_LAST_TAB, 0), false)
