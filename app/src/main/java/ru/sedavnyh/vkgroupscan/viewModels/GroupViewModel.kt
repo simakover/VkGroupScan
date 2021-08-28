@@ -1,13 +1,15 @@
 package ru.sedavnyh.vkgroupscan.viewModels
 
 import android.app.PendingIntent
-import android.content.*
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,7 @@ import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import toothpick.Toothpick
 import javax.inject.Inject
+
 
 class GroupViewModel: ViewModel() {
 
@@ -178,9 +181,11 @@ class GroupViewModel: ViewModel() {
     }
 
     fun copyCommentToClipboard(comment: String) {
-        val myClipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val myClip: ClipData = ClipData.newPlainText("Label", comment)
-        myClipboard.setPrimaryClip(myClip)
-        Toast.makeText(context, "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
+        val mainIntent = Intent().apply {
+            action = "eu.kanade.tachiyomi.SEARCH"
+            putExtra("query", comment)
+        }
+        val bundle = Bundle()
+        startActivity(context,mainIntent,bundle)
     }
 }
