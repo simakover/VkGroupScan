@@ -180,10 +180,10 @@ class GroupViewModel: ViewModel() {
         GlobalScope.launch(Dispatchers.IO) { repository.local.insertPost(post) }
     }
 
-    fun copyCommentToClipboard(comment: String) {
+    fun openTachiyomiWithQuery(query: String) {
         val mainIntent = Intent().apply {
             action = "eu.kanade.tachiyomi.SEARCH"
-            putExtra("query", comment)
+            putExtra("query", query)
         }
         val bundle = Bundle()
         startActivity(context,mainIntent,bundle)

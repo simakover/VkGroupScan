@@ -40,7 +40,7 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
-        adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::copyCommentToClipboard, ::goToImageFragment)
+        adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::openTachiyomiWithQuery, ::goToImageFragment)
         binding.allGroupsRecyclerView.adapter = adapter
         binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
