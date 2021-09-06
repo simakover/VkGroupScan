@@ -2,9 +2,9 @@ package ru.sedavnyh.vkgroupscan.util
 
 import androidx.recyclerview.widget.DiffUtil
 
-class ListStringDiffUtil(
-    private val oldList: List<String>,
-    private val newList: List<String>
+class BasicDiffUtil<T>(
+    private val oldList: List<T>,
+    private val newList: List<T>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
@@ -22,4 +22,5 @@ class ListStringDiffUtil(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
+
 }

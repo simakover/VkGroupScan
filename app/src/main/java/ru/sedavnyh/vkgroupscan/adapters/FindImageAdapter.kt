@@ -9,7 +9,7 @@ import coil.load
 import kotlinx.android.synthetic.main.find_image_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.models.entities.FindImageEntity
-import ru.sedavnyh.vkgroupscan.util.FindImageDiffUtil
+import ru.sedavnyh.vkgroupscan.util.BasicDiffUtil
 
 class FindImageAdapter(
     val onTextClick: (String) -> Unit
@@ -45,7 +45,7 @@ class FindImageAdapter(
     }
 
     fun setData(images: List<FindImageEntity>) {
-        val postDiffUtil = FindImageDiffUtil(dataList, images)
+        val postDiffUtil = BasicDiffUtil(dataList, images)
         val postDiffResult = DiffUtil.calculateDiff(postDiffUtil)
         this.dataList = images
         postDiffResult.dispatchUpdatesTo(this)

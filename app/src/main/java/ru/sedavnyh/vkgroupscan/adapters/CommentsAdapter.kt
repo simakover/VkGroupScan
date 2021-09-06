@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.string_row.view.*
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.util.ListStringDiffUtil
+import ru.sedavnyh.vkgroupscan.util.BasicDiffUtil
 
 
 class CommentsAdapter(
@@ -39,7 +39,7 @@ class CommentsAdapter(
     }
 
     fun setData(links: List<String>) {
-        val commentDiffUtil = ListStringDiffUtil(dataList, links)
+        val commentDiffUtil = BasicDiffUtil(dataList, links)
         val commentDiffResult = DiffUtil.calculateDiff(commentDiffUtil)
         this.dataList = links
         commentDiffResult.dispatchUpdatesTo(this)

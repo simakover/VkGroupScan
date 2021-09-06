@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import kotlinx.android.synthetic.main.image_row.view.*
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.util.ListStringDiffUtil
+import ru.sedavnyh.vkgroupscan.util.BasicDiffUtil
 
 class ImageAdapter : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
 
@@ -38,7 +38,7 @@ class ImageAdapter : RecyclerView.Adapter<ImageAdapter.MyViewHolder>() {
     }
 
     fun setData(links: List<String>) {
-        val postDiffUtil = ListStringDiffUtil(dataList, links)
+        val postDiffUtil = BasicDiffUtil(dataList, links)
         val postDiffResult = DiffUtil.calculateDiff(postDiffUtil)
         this.dataList = links
         postDiffResult.dispatchUpdatesTo(this)
