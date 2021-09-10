@@ -1,11 +1,9 @@
 package ru.sedavnyh.vkgroupscan.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ru.sedavnyh.vkgroupscan.data.database.VkDao
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
@@ -51,16 +49,7 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
         vkDao.updateGroup(groupEntity)
     }
 
-    //comments
-    suspend fun insertComment(comment: Comment) {
-        vkDao.insertComment(comment)
-    }
-
-    suspend fun deleteComments(groupId: Int = 0) {
-        vkDao.deleteComments(groupId)
-    }
-
-    suspend fun countComments(groupId: Int = 0): Int {
-        return vkDao.countComments(groupId)
+    suspend fun deleteGroup(group: GroupEntity) {
+        vkDao.deleteGroup(group)
     }
 }

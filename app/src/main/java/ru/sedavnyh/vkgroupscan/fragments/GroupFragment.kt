@@ -1,6 +1,7 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.sedavnyh.vkgroupscan.R
+import ru.sedavnyh.vkgroupscan.activities.MainActivity
 import ru.sedavnyh.vkgroupscan.adapters.GroupAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentGroupBinding
 import ru.sedavnyh.vkgroupscan.di.Scopes
@@ -57,8 +59,14 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.refresh_comments -> {
+            R.id.refresh_comments ->
                 viewModel.refreshComments(group.id)
+            R.id.delete_group ->{
+                viewModel.deleteGroup(group)
+
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                requireActivity().startActivity(intent)
+                requireActivity().finishAffinity()
             }
         }
         return super.onOptionsItemSelected(item)

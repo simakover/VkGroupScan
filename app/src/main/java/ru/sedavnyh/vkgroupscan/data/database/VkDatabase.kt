@@ -5,11 +5,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 import ru.sedavnyh.vkgroupscan.util.Constants.DATABASE_VERSION
 
 @Database(
-    entities = [GroupEntity::class, Comment::class, PostEntity::class],
+    entities = [GroupEntity::class, PostEntity::class],
     version = DATABASE_VERSION,
     exportSchema = false
 )

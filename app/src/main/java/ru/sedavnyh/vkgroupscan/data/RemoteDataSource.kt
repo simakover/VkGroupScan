@@ -1,6 +1,7 @@
 package ru.sedavnyh.vkgroupscan.data
 
 import ru.sedavnyh.vkgroupscan.data.network.Api
+import ru.sedavnyh.vkgroupscan.models.groupsGetByIdModel.GroupsGetByIdResponse
 import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.WallGetCommentsResponse
 import ru.sedavnyh.vkgroupscan.models.wallGetModel.Response
 import ru.sedavnyh.vkgroupscan.util.Constants.ACCESS_TOKEN
@@ -24,5 +25,11 @@ class RemoteDataSource @Inject constructor(
         postId: String
     ): WallGetCommentsResponse {
         return vkApi.wallGetComments(ACCESS_TOKEN, API_VERSION, ownerId, postId, THREAD_ITEMS_COUNT)
+    }
+
+    suspend fun groupsGetById(
+        group_id: String
+    ): GroupsGetByIdResponse {
+        return vkApi.groupsGetByID(ACCESS_TOKEN, API_VERSION, group_id)
     }
 }

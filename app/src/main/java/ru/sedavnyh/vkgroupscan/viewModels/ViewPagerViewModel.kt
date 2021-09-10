@@ -3,7 +3,6 @@ package ru.sedavnyh.vkgroupscan.viewModels
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
@@ -100,7 +99,6 @@ class ViewPagerViewModel : ViewModel() {
 
     suspend fun getGroupFragments(): ArrayList<Fragment> {
         if (fragmentList.isNullOrEmpty()) {
-            checkGroupsExists()
             val groups = repository.local.selectGroups()
             fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
             groups.map {
@@ -108,91 +106,6 @@ class ViewPagerViewModel : ViewModel() {
             }
         }
         return fragmentList
-    }
-
-    private suspend fun checkGroupsExists() {
-        val groups = repository.local.selectGroups()
-        if (groups.isNullOrEmpty()) {
-            var group = GroupEntity(
-                -140579116,
-                15963, // 15963
-                "скрины из кетайских пopномультеков 0.2",
-                "https://sun1-25.userapi.com/s/v1/ig2/UL3xepuF-U7gpdwOLU8CBePLBJDMAu9QmtFw_QiDrBZg-B1LdPvv_bBeevZM3p5mEj2Cl4cM4VzCu-UQ-rEqnu-8.jpg?size=50x50&quality=96&crop=175,0,449,449&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -192370022,
-                2092, // 2092
-                "a slice of doujin",
-                "https://sun1-13.userapi.com/s/v1/ig2/JtRDppZ2PqNu-rnWmxsqyvxDrOKqYTc3Jjkz_ChEV_c9grSMBZqL01TMacwfA7m5crENKZIZZUiUJBg0NqZkt5DH.jpg?size=50x50&quality=96&crop=104,4,908,908&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -184665352,
-                1600, // 1600
-                "doujin cap",
-                "https://sun1-29.userapi.com/s/v1/ig2/5EmyxrOTvObLCoEfwb3ZDpb6ena0pPrwkpm37ga1bPOs-JN1rff8KQL7EiFNY1rGPobxvVHMSavfz3mAg2rDCNYs.jpg?size=50x50&quality=96&crop=106,0,426,426&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -147646952,
-                2030, // 2042
-                "Rock Waifu",
-                "https://sun1-88.userapi.com/s/v1/if1/2r9p7KOclWs73AfvhLzGayxRAKik9gdCvLGc96vkhRLWiakdwl-37O7pQo18Udjaveke0jFR.jpg?size=50x50&quality=96&crop=0,0,770,770&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -169063743,
-                1280, // 1292
-                "Хентай комиксы",
-                "https://sun1-20.userapi.com/s/v1/ig2/7R1uYOMNH82WtLyvSTUdX_RJXoCTJDts2axbxh9WA9Z79af3PLWX1HE0zhURKe_IpycBB_mgAvqyH3Mnkl7hupsS.jpg?size=50x50&quality=96&crop=135,135,730,730&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -155818708,
-                310, // 324
-                "manga r18",
-                "https://sun1-85.userapi.com/s/v1/if1/TEM6dilWGeluaYapMWeFDaVkQDLE3q99_b--9XKZExJjppA7RvzC5swB1A1kJOaT1UBMEtNH.jpg?size=50x50&quality=96&crop=10,10,490,490&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -147646952,
-                2030, // 2042
-                "Rock Waifu",
-                "https://sun1-88.userapi.com/s/v1/if1/2r9p7KOclWs73AfvhLzGayxRAKik9gdCvLGc96vkhRLWiakdwl-37O7pQo18Udjaveke0jFR.jpg?size=50x50&quality=96&crop=0,0,770,770&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -169063743,
-                1280, // 1292
-                "Хентай комиксы",
-                "https://sun1-20.userapi.com/s/v1/ig2/7R1uYOMNH82WtLyvSTUdX_RJXoCTJDts2axbxh9WA9Z79af3PLWX1HE0zhURKe_IpycBB_mgAvqyH3Mnkl7hupsS.jpg?size=50x50&quality=96&crop=135,135,730,730&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -155818708,
-                314, // 324
-                "manga r18",
-                "https://sun1-85.userapi.com/s/v1/if1/TEM6dilWGeluaYapMWeFDaVkQDLE3q99_b--9XKZExJjppA7RvzC5swB1A1kJOaT1UBMEtNH.jpg?size=50x50&quality=96&crop=10,10,490,490&ava=1"
-            )
-            repository.local.insertGroup(group)
-
-            group = GroupEntity(
-                -202639237,
-                170, // 324
-                "hellokittipunk",
-                "https://sun1-96.userapi.com/s/v1/ig2/HYS9Xb9COJzI1IlpcNjCaONTuIXkvq_qND1Z7qJLPisYytsryBr9JTJSYMZGPsOhzKdEt8ZLxNXvNLDmR5ORF1L-.jpg?size=50x50&quality=96&crop=4,4,968,968&ava=1"
-            )
-            repository.local.insertGroup(group)
-        }
     }
 
     private fun createNotification(title: String) {

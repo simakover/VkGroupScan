@@ -1,11 +1,9 @@
 package ru.sedavnyh.vkgroupscan.data.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
 
 @Dao
 interface VkDao {
@@ -43,13 +41,6 @@ interface VkDao {
     @Update
     suspend fun updateGroup(groupEntity: GroupEntity)
 
-    //comments
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertComment(comment: Comment)
-
-    @Query("DELETE FROM COMMENTS_TABLE WHERE ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId))")
-    suspend fun deleteComments(groupId: Int)
-
-    @Query("SELECT COUNT(1) FROM COMMENTS_TABLE WHERE ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ")
-    suspend fun countComments(groupId: Int): Int
+    @Delete
+    suspend fun deleteGroup(group: GroupEntity)
 }

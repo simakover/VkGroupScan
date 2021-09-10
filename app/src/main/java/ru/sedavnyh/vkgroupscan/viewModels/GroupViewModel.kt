@@ -20,16 +20,15 @@ import ru.sedavnyh.vkgroupscan.activities.MainActivity
 import ru.sedavnyh.vkgroupscan.data.Repository
 import ru.sedavnyh.vkgroupscan.di.Scopes.APP_SCOPE
 import ru.sedavnyh.vkgroupscan.mappers.FromResponseToEntityMapper
+import ru.sedavnyh.vkgroupscan.models.entities.GroupEntity
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.Comment
-import ru.sedavnyh.vkgroupscan.models.wallGetCommentsModel.RespondThread
 import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.TextOperations
 import toothpick.Toothpick
 import javax.inject.Inject
 
 
-class GroupViewModel: ViewModel() {
+class GroupViewModel : ViewModel() {
 
     @Inject
     lateinit var repository: Repository
@@ -45,15 +44,13 @@ class GroupViewModel: ViewModel() {
     private val channelId = "Progress Notification"
     private var mSort: SharedPreferences
 
-    var lastItem: Int = 0
-
-    init{
+    init {
         Toothpick.inject(this, Toothpick.openScope(APP_SCOPE))
         notificationManager = NotificationManagerCompat.from(context)
         mSort = context.getSharedPreferences(Constants.APP_PREFERENCES, Context.MODE_PRIVATE)
     }
 
-    fun getData(groupId: Int, priority: String = "DESC") : LiveData<List<PostEntity>> {
+    fun getData(groupId: Int, priority: String = "DESC"): LiveData<List<PostEntity>> {
         return if (priority == "ASC")
             repository.local.selectPostsAscLiveData(groupId)
         else
@@ -62,9 +59,12 @@ class GroupViewModel: ViewModel() {
 
     fun refreshComments(groupId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            val loadedCommentsBefore = repository.local.countComments(groupId)
-            repository.local.deleteComments(groupId)
-            val posts = repository.local.selectPostsDesc(groupId)
+            var posts = repository.local.selectPostsDesc(groupId)
+            var loadedCommentsBefore = 0
+            posts.forEach {
+                loadedCommentsBefore += it.totalComments.size
+            }
+
             var postCompleted = 0
             createNotification("Загрузка комментариев")
 
@@ -84,22 +84,12 @@ class GroupViewModel: ViewModel() {
                         if (!it.text.isNullOrEmpty()) {
                             summaryComment.add(it.text!!)
                         }
-                        repository.local.insertComment(it)
 
                         it.respondThread?.items?.map { respComm ->
-                            val comment = Comment(
-                                respComm.id,
-                                respComm.fromId,
-                                respComm.ownerId,
-                                respComm.postId,
-                                respComm.text,
-                                RespondThread(null)
-                            )
                             respComm.text = TextOperations().cleanComment(respComm.text)
                             if (!respComm.text.isNullOrEmpty()) {
                                 summaryComment.add(respComm.text!!)
                             }
-                            repository.local.insertComment(comment)
                         }
                     }
 
@@ -119,7 +109,12 @@ class GroupViewModel: ViewModel() {
                 postCompleted += 1
                 updateNotification("Обработано постов: $postCompleted/${posts.size}", postCompleted, posts.size)
             }
-            val loadedCommentsAfter = repository.local.countComments(groupId)
+
+            posts = repository.local.selectPostsDesc(groupId)
+            var loadedCommentsAfter = 0
+            posts.forEach {
+                loadedCommentsAfter += it.totalComments.size
+            }
             updateNotification("Загружено комментариев: ${loadedCommentsAfter - loadedCommentsBefore}")
         }
     }
@@ -172,7 +167,6 @@ class GroupViewModel: ViewModel() {
     }
 
     fun deletePost(post: PostEntity, position: Int) {
-        lastItem = position
         GlobalScope.launch(Dispatchers.IO) { repository.local.deletePost(post) }
     }
 
@@ -186,6 +180,10 @@ class GroupViewModel: ViewModel() {
             putExtra("query", query)
         }
         val bundle = Bundle()
-        startActivity(context,mainIntent,bundle)
+        startActivity(context, mainIntent, bundle)
+    }
+
+    fun deleteGroup(group: GroupEntity) {
+        GlobalScope.launch(Dispatchers.IO) { repository.local.deleteGroup(group) }
     }
 }

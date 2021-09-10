@@ -1,26 +1,26 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_pager.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.sedavnyh.vkgroupscan.R
-import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
-import ru.sedavnyh.vkgroupscan.util.Constants
-import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
-import android.content.Intent
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import ru.sedavnyh.vkgroupscan.activities.MainActivity
+import ru.sedavnyh.vkgroupscan.adapters.ViewPagerAdapter
+import ru.sedavnyh.vkgroupscan.util.AddGroupDialog
+import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.util.Constants.APP_PREFERENCE_LAST_TAB
+import ru.sedavnyh.vkgroupscan.viewModels.ViewPagerViewModel
 
 
 class ViewPagerFragment : Fragment() {
@@ -84,8 +84,16 @@ class ViewPagerFragment : Fragment() {
                 setSortOrder("DESC")
             R.id.menu_date_asc ->
                 setSortOrder("ASC")
+            R.id.add_group ->
+                addGroup()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun addGroup() {
+        val dialog = AddGroupDialog()
+        val manager = requireActivity().supportFragmentManager
+        dialog.show(manager, "myDialog")
     }
 
     private fun setSortOrder(sortOrder: String) {
