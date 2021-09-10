@@ -37,7 +37,6 @@
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
         android:hint="Имя группы"
-        android:inputType="number"
         app:layout_constraintEnd_toEndOf="@+id/getGroup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/group_id" />
