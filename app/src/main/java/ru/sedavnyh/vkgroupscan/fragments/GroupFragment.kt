@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -44,6 +45,8 @@ class GroupFragment: Fragment() {
         Toothpick.inject(this, Toothpick.openScope(Scopes.APP_SCOPE))
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
+        group = arguments?.getParcelable("group")!!
+
         adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::openTachiyomiWithQuery, ::goToImageFragment)
         binding.allGroupsRecyclerView.adapter = adapter
         binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -75,7 +78,11 @@ class GroupFragment: Fragment() {
     }
 
     fun constructFragment(currGroup : GroupEntity) : GroupFragment {
-        group = currGroup
+        val args: Bundle = bundleOf()
+        args.putParcelable("group",currGroup)
+        this.arguments = args
+
+        group = arguments?.getParcelable("group")!!
         return this
     }
 
