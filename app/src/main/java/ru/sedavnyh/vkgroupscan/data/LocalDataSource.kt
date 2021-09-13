@@ -23,6 +23,11 @@ class LocalDataSource @Inject constructor(private val vkDao: VkDao) {
     suspend fun deletePost(post: PostEntity) {
         return vkDao.deletePost(post)
     }
+
+    suspend fun deleteAllGroupPosts(groupId: Int) {
+        return vkDao.deleteAllGroupPosts(groupId)
+    }
+
     // posts LiveData
     fun selectPostsAscLiveData(groupId: Int = 0): LiveData<List<PostEntity>> {
         return vkDao.selectPostsAscLiveData(groupId)

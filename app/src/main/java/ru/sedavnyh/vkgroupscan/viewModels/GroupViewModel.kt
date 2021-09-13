@@ -184,6 +184,9 @@ class GroupViewModel : ViewModel() {
     }
 
     fun deleteGroup(group: GroupEntity) {
-        GlobalScope.launch(Dispatchers.IO) { repository.local.deleteGroup(group) }
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.local.deleteGroup(group)
+            repository.local.deleteAllGroupPosts(group.id)
+        }
     }
 }

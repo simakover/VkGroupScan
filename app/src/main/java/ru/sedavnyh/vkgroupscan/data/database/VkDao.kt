@@ -20,6 +20,9 @@ interface VkDao {
     @Delete
     suspend fun deletePost(post: PostEntity)
 
+    @Query("DELETE FROM POSTS_TABLE WHERE ownerId = :groupId")
+    suspend fun deleteAllGroupPosts(groupId: Int)
+
     //posts LiveData
     @Query("SELECT * FROM POSTS_TABLE WHERE ISPINNED = 0 and ((:groupId = 0 and ownerId = ownerId) or (ownerId = :groupId)) ORDER BY DATE ASC")
     fun selectPostsAscLiveData(groupId: Int) : LiveData<List<PostEntity>>
