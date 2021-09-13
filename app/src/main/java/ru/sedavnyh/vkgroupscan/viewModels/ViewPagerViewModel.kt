@@ -100,9 +100,9 @@ class ViewPagerViewModel : ViewModel() {
     suspend fun getGroupFragments(): ArrayList<Fragment> {
         if (fragmentList.isNullOrEmpty()) {
             val groups = repository.local.selectGroups()
-            fragmentList.add(GroupFragment(GroupEntity(0, 0, "All", "")))
+            fragmentList.add(GroupFragment().constructFragment(GroupEntity(0, 0, "All", "")))
             groups.map {
-                fragmentList.add(GroupFragment(it))
+                fragmentList.add(GroupFragment().constructFragment(it))
             }
         }
         return fragmentList

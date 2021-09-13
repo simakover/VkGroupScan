@@ -23,7 +23,7 @@ import ru.sedavnyh.vkgroupscan.util.Constants
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 import toothpick.Toothpick
 
-class GroupFragment(val group : GroupEntity) : Fragment() {
+class GroupFragment: Fragment() {
 
     lateinit var viewModel: GroupViewModel
     lateinit var adapter: GroupAdapter
@@ -32,6 +32,8 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var mSort: SharedPreferences
+
+    lateinit var group: GroupEntity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +72,11 @@ class GroupFragment(val group : GroupEntity) : Fragment() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun constructFragment(currGroup : GroupEntity) : GroupFragment {
+        group = currGroup
+        return this
     }
 
     fun setObserverWithPriority() {
