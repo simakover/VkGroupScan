@@ -76,14 +76,13 @@ class ImageFragment : Fragment() {
     }
 
     private fun findImage(link: String) {
-        val endLink = java.net.URLEncoder.encode(link, "utf-8")
 //        val uris = Uri.parse("https://yandex.ru/images/search?rpt=imageview&url=$endLink")
 //        val intents = Intent(Intent.ACTION_VIEW, uris)
 //        val bundle = Bundle()
 //        bundle.putBoolean("new_window", true)
 //        intents.putExtras(bundle)
 //        ContextCompat.startActivity(requireContext(), intents, bundle)
-        val action = ImageFragmentDirections.actionImageFragmentToFindImageFragment(endLink)
+        val action = ImageFragmentDirections.actionImageFragmentToFindImageFragment(link)
         findNavController().navigate(action)
     }
 

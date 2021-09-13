@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.FindImageAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentFindImageBinding
 import ru.sedavnyh.vkgroupscan.models.entities.FindImageEntity
@@ -43,8 +45,14 @@ class FindImageFragment : Fragment() {
 
         val linkToImage = args.linkToImage
 
+        binding.rootImageView.load(linkToImage) {
+            crossfade(true)
+            placeholder(R.drawable.ic_broken_image)
+        }
+
+        val endLink = java.net.URLEncoder.encode(linkToImage, "utf-8")
         val images = GlobalScope.async {
-            val doc: Document = Jsoup.connect("https://yandex.ru/images/search?rpt=imageview&url=$linkToImage").get()
+            val doc: Document = Jsoup.connect("https://yandex.ru/images/search?rpt=imageview&url=$endLink").get()
             val elements : Elements = doc.select("div.CbirSites-Item")
             val images : MutableList<FindImageEntity> = mutableListOf()
 
