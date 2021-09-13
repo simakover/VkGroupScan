@@ -18,6 +18,7 @@ import org.jsoup.select.Elements
 import ru.sedavnyh.vkgroupscan.adapters.FindImageAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentFindImageBinding
 import ru.sedavnyh.vkgroupscan.models.entities.FindImageEntity
+import ru.sedavnyh.vkgroupscan.util.TextOperations
 import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 
 class FindImageFragment : Fragment() {
@@ -50,8 +51,9 @@ class FindImageFragment : Fragment() {
             elements.forEach {
                 val thumb: Elements = it.select("div.CbirSites-ItemThumb")
                 val link: String = thumb.select("a").attr("href")
-                val title : String = it.select("a.Link_theme_normal").html()
-                images.add(FindImageEntity(title,link))
+                val title : String? = TextOperations().cleanComment(it.select("a.Link_theme_normal").html())
+                if (title!!.isNotEmpty())
+                    images.add(FindImageEntity(title,link))
             }
             images
         }

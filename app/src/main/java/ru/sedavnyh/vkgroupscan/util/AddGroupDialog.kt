@@ -44,7 +44,7 @@ class AddGroupDialog : DialogFragment() {
                     } catch (e: Exception) {
                         layout.post_count.setText("Группа не найдена")
                         button.isEnabled = false
-                        button.alpha = 0.5f
+                        button.alpha = 0.3f
                     }
                 }
             }
