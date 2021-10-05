@@ -47,7 +47,7 @@ class GroupFragment: Fragment() {
 
         group = arguments?.getParcelable("group")!!
 
-        adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::openTachiyomiWithQuery, ::goToImageFragment)
+        adapter = GroupAdapter(viewModel::goToPostPage, viewModel::deletePost, viewModel::insertPost, viewModel::openTachiyomiWithQuery, viewModel::copyCommentToClipboard, ::goToImageFragment)
         binding.allGroupsRecyclerView.adapter = adapter
         binding.allGroupsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 

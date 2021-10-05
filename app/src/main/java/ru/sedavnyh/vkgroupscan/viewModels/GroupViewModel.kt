@@ -1,11 +1,10 @@
 package ru.sedavnyh.vkgroupscan.viewModels
 
 import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -181,6 +180,23 @@ class GroupViewModel : ViewModel() {
         }
         val bundle = Bundle()
         startActivity(context, mainIntent, bundle)
+    }
+
+    fun copyCommentToClipboard(comment: String) {
+        val myClipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val myClip: ClipData = ClipData.newPlainText("Label", comment)
+        myClipboard.setPrimaryClip(myClip)
+        Toast.makeText(context, "$comment copied to clipboard", Toast.LENGTH_SHORT).show()
+    }
+
+    fun findImage(link: String) {
+        val endLink = java.net.URLEncoder.encode(link, "utf-8")
+        val uris = Uri.parse("https://yandex.ru/images/search?rpt=imageview&url=$endLink")
+        val intents = Intent(Intent.ACTION_VIEW, uris)
+        val bundle = Bundle()
+        bundle.putBoolean("new_window", true)
+        intents.putExtras(bundle)
+        startActivity(context, intents, bundle)
     }
 
     fun deleteGroup(group: GroupEntity) {

@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import kotlinx.android.synthetic.main.find_image_row.view.*
+import kotlinx.android.synthetic.main.find_image_row.view.copytoClipboard_button
+import kotlinx.android.synthetic.main.find_image_row.view.goToTach_button
+import kotlinx.android.synthetic.main.string_row.view.*
 import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.models.entities.FindImageEntity
 import ru.sedavnyh.vkgroupscan.util.BasicDiffUtil
 
 class FindImageAdapter(
-    val onTextClick: (String) -> Unit
+    val goToTach: (String) -> Unit,
+    val copyToClipboard: (String) -> Unit
 ) : RecyclerView.Adapter<FindImageAdapter.MyViewHolder>() {
 
     private var dataList = emptyList<FindImageEntity>()
@@ -25,8 +29,11 @@ class FindImageAdapter(
                 placeholder(R.drawable.ic_broken_image)
             }
             itemView.find_textView.text = image.title
-            itemView.find_textView.setOnClickListener {
-                onTextClick.invoke(image.title)
+            itemView.goToTach_button.setOnClickListener {
+                goToTach.invoke(image.title)
+            }
+            itemView.copytoClipboard_button.setOnClickListener {
+                copyToClipboard.invoke(image.title)
             }
         }
     }

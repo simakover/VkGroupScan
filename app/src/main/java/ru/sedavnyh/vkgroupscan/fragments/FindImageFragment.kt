@@ -39,7 +39,7 @@ class FindImageFragment : Fragment() {
         _binding = FragmentFindImageBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
-        val adapter = FindImageAdapter(viewModel::openTachiyomiWithQuery)
+        val adapter = FindImageAdapter(viewModel::openTachiyomiWithQuery, viewModel::copyCommentToClipboard)
         binding.FindImageRecyclerView.adapter = adapter
         binding.FindImageRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -48,6 +48,10 @@ class FindImageFragment : Fragment() {
         binding.rootImageView.load(linkToImage) {
             crossfade(true)
             placeholder(R.drawable.ic_broken_image)
+        }
+
+        binding.openYandexButton.setOnClickListener {
+            viewModel.findImage(linkToImage)
         }
 
         val endLink = java.net.URLEncoder.encode(linkToImage, "utf-8")

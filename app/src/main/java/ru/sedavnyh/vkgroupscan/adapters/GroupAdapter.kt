@@ -15,17 +15,18 @@ import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
 import ru.sedavnyh.vkgroupscan.util.PostDiffUtil
 
 class GroupAdapter(
-    val onTitleClick: (PostEntity) -> Unit,
+    val onOpenVKClick: (PostEntity) -> Unit,
     val onDeleteClick: (PostEntity, Int) -> Unit,
     val onSnackBarUndo: (PostEntity) -> Unit,
-    val onInnerCommentClick: (String) -> Unit,
+    val goToTachClick: (String) -> Unit,
+    val copyToClipboardClick: (String) -> Unit,
     val onImageClick: (PostEntity) -> Unit
 ): RecyclerView.Adapter<GroupAdapter.MyViewHolder>() {
     private var dataList = emptyList<PostEntity>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val cAdapter by lazy { CommentsAdapter(onCommentClick = onInnerCommentClick) }
+        private val cAdapter by lazy { CommentsAdapter(goToTachClick, copyToClipboardClick) }
 
         fun bind(post: PostEntity, position: Int) {
 
@@ -47,14 +48,6 @@ class GroupAdapter(
                 onImageClick.invoke(post)
             }
 
-            itemView.title_text_view.setOnClickListener {
-                onTitleClick.invoke(post)
-            }
-
-            itemView.group_avatar.setOnClickListener {
-               onTitleClick.invoke(post)
-            }
-
             itemView.delete_post_button.setOnClickListener {
                 onDeleteClick.invoke(post, position)
 
@@ -65,6 +58,10 @@ class GroupAdapter(
                     onSnackBarUndo.invoke(post)
                 }
                 snackBar.show()
+            }
+
+            itemView.openVK_post_button.setOnClickListener {
+                onOpenVKClick.invoke(post)
             }
 
             itemView.founded_links_recyclerView.adapter = cAdapter

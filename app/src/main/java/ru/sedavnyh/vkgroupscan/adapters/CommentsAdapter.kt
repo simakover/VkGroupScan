@@ -11,7 +11,8 @@ import ru.sedavnyh.vkgroupscan.util.BasicDiffUtil
 
 
 class CommentsAdapter(
-    val onCommentClick: (String) -> Unit
+    val goToTach: (String) -> Unit,
+    val copyToClipboard: (String) -> Unit
 ) : RecyclerView.Adapter<CommentsAdapter.MyViewHolder>() {
 
     var dataList : List<String> = emptyList()
@@ -19,8 +20,11 @@ class CommentsAdapter(
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(comment: String) {
             itemView.textRow_textView.text = comment
-            itemView.textRow_textView.setOnClickListener {
-                onCommentClick.invoke(comment)
+            itemView.goToTach_button.setOnClickListener {
+                goToTach.invoke(comment)
+            }
+            itemView.copytoClipboard_button.setOnClickListener {
+                copyToClipboard.invoke(comment)
             }
         }
     }
