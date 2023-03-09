@@ -3,7 +3,7 @@ package ru.sedavnyh.vkgroupscan.util
 object Constants {
     const val API_VERSION = "5.131"
     const val BASE_URL = "https://api.vk.com/method/"
-    const val ACCESS_TOKEN = "a311d885a311d885a311d885e1a369d273aa311a311d885c3a3128475ab59ece995964f"
+    const val ACCESS_TOKEN = "vk1.a.w_tQJ4GVTF-C5bdwTmZpAdtvvgL_xkp_tuEld38uPRl6X6Wzkz6iQq51HC9Sj0amockw9fHtT05XukgWzdeWxTeKNGVd0W1x5GclgLsX_4vFzEWVY9YbfpzRv0GY5nlletwZDGpVLk_XXBc1p2CAI859J5ZeBMmtmT1lOFL9KDO6i6aHMpU91ms2b_vaPXr3xmkcCbYo0R30Usqt3Bnj0Q"
     const val POST_LOAD_COUNT = 100
     const val TIME_OUT = 15L
     const val DATABASE_VERSION = 1

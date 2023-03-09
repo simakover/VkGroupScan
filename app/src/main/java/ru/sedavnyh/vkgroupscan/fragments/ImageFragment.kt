@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
@@ -14,6 +15,7 @@ import ru.sedavnyh.vkgroupscan.R
 import ru.sedavnyh.vkgroupscan.adapters.ImageAdapter
 import ru.sedavnyh.vkgroupscan.databinding.FragmentImageBinding
 import ru.sedavnyh.vkgroupscan.models.entities.PostEntity
+import ru.sedavnyh.vkgroupscan.viewModels.GroupViewModel
 
 
 class ImageFragment : Fragment() {
@@ -27,12 +29,15 @@ class ImageFragment : Fragment() {
 
     private lateinit var post : PostEntity
 
+    lateinit var viewModel: GroupViewModel
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentImageBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
 
         post = args.postEntityArg
 
@@ -76,14 +81,7 @@ class ImageFragment : Fragment() {
     }
 
     private fun findImage(link: String) {
-//        val uris = Uri.parse("https://yandex.ru/images/search?rpt=imageview&url=$endLink")
-//        val intents = Intent(Intent.ACTION_VIEW, uris)
-//        val bundle = Bundle()
-//        bundle.putBoolean("new_window", true)
-//        intents.putExtras(bundle)
-//        ContextCompat.startActivity(requireContext(), intents, bundle)
-        val action = ImageFragmentDirections.actionImageFragmentToFindImageFragment(link)
-        findNavController().navigate(action)
+        viewModel.findImage(link)
     }
 
     override fun onDestroyView() {
