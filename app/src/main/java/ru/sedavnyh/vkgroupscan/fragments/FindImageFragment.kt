@@ -1,7 +1,6 @@
 package ru.sedavnyh.vkgroupscan.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,30 +55,15 @@ class FindImageFragment : Fragment() {
         }
 
         val endLink = java.net.URLEncoder.encode(linkToImage, "utf-8")
-
-        Log.d("endLink",endLink)
-
         val images = GlobalScope.async {
             val doc: Document = Jsoup.connect("https://yandex.ru/images/search?rpt=imageview&url=$endLink").get()
-
-            Log.d("doc", doc.toString())
-
             val elements : Elements = doc.select("div.CbirSites-Item")
-
-            Log.d("elements", elements.toString())
-
             val images : MutableList<FindImageEntity> = mutableListOf()
 
             elements.forEach {
-                Log.d("elements", "found element")
                 val thumb: Elements = it.select("div.CbirSites-ItemThumb")
                 val link: String = thumb.select("a").attr("href")
-
-                val title_item: Elements = it.select("div.CbirSites-ItemInfo")
-                val title_div: Elements = title_item.select("div.CbirSites-ItemTitle")
-
-
-                val title : String? = TextOperations().cleanComment(title_div.select("a").html())
+                val title : String? = TextOperations().cleanComment(it.select("a.Link_theme_normal").html())
                 if (title!!.isNotEmpty())
                     images.add(FindImageEntity(title,link))
             }
